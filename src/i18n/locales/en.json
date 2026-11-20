@@ -151,7 +151,6 @@
     "phrase": "I can't wait",
     "phraseLabel": "Phrase",
     "phraseError": "Not quite. Type it exactly.",
-    "progress": "Step {{step}} of {{total}}",
     "keepWaiting": "Keep waiting",
     "openAnyway": "Open anyway"
   },

@@ -2,7 +2,6 @@ import { useId, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Dialog } from "../../components/Dialog";
 import {
-  CHAIN_TOTAL_STEPS,
   cancelChain,
   confirmStep,
   matchesPhrase,
@@ -78,11 +77,7 @@ export function ConfirmChain({ capsule, now, onAbort, onComplete }: ConfirmChain
             </button>
           </>
         }
-      >
-        <p className="dialog__step">
-          {t("chain.progress", { step: state.step, total: CHAIN_TOTAL_STEPS })}
-        </p>
-      </Dialog>
+      />
     );
   }
 
@@ -106,9 +101,6 @@ export function ConfirmChain({ capsule, now, onAbort, onComplete }: ConfirmChain
         </>
       }
     >
-      <p className="dialog__step">
-        {t("chain.progress", { step: CHAIN_TOTAL_STEPS, total: CHAIN_TOTAL_STEPS })}
-      </p>
       <form id={formId} className="field" onSubmit={onSubmitPhrase}>
         <label htmlFor={inputId}>{t("chain.phrasePrompt", { phrase: expected })}</label>
         <input

@@ -1,7 +1,5 @@
 /** Number of "are you sure?" dialogs before the typed phrase (SPEC §5). */
 export const CHAIN_DIALOGS = 5;
-/** Dialogs plus the phrase step, for "Step n of 6". */
-export const CHAIN_TOTAL_STEPS = CHAIN_DIALOGS + 1;
 
 export type DialogStep = 1 | 2 | 3 | 4 | 5;
 

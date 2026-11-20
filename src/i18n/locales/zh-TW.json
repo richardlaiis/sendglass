@@ -146,7 +146,6 @@
     "phrase": "我等不及了",
     "phraseLabel": "通關語",
     "phraseError": "不太對喔，請一字不差地輸入。",
-    "progress": "第 {{step}} 步，共 {{total}} 步",
     "keepWaiting": "繼續等待",
     "openAnyway": "還是要打開"
   },

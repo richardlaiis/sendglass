@@ -677,11 +677,6 @@ a {
   color: var(--md-sys-color-on-surface-variant);
 }
 
-.dialog__step {
-  font-size: 0.875rem;
-  font-variant-numeric: tabular-nums;
-}
-
 .dialog__actions {
   display: flex;
   flex-wrap: wrap;

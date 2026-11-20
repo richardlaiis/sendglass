@@ -124,6 +124,7 @@ a {
 .icon-btn--small {
   color: var(--md-sys-color-on-surface-variant);
   opacity: 0.8;
+  margin-left: var(--space-1);
 }
 
 .icon-btn:hover {

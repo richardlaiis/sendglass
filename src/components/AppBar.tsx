@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { REPO_URL } from "../app/links";
 import { useSettings } from "../app/SettingsContext";
 import { navigate } from "../app/router";
 import { nextTheme } from "../domain/locale";
@@ -7,6 +8,7 @@ import {
   ArrowBackIcon,
   AutoThemeIcon,
   DarkModeIcon,
+  GitHubIcon,
   HistoryIcon,
   LightModeIcon,
   SettingsIcon,
@@ -16,7 +18,7 @@ interface AppBarProps {
   title: string;
   /** Shows a back button that returns to Home. */
   back?: boolean;
-  /** Shows the history and settings buttons (Home only). */
+  /** Shows the GitHub, history and settings buttons (Home only). */
   showSettings?: boolean;
 }
 
@@ -43,7 +45,21 @@ export function AppBar({ title, back = false, showSettings = false }: AppBarProp
           <ArrowBackIcon />
         </button>
       )}
-      <h1 className="app-bar__title">{title}</h1>
+      <div className="app-bar__title-group">
+        <h1 className="app-bar__title">{title}</h1>
+        {showSettings && (
+          <a
+            className="icon-btn icon-btn--small"
+            href={REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={t("nav.github")}
+            title={t("nav.github")}
+          >
+            <GitHubIcon />
+          </a>
+        )}
+      </div>
       {showSettings && (
         <a className="icon-btn" href="#/history" aria-label={t("nav.history")}>
           <HistoryIcon />

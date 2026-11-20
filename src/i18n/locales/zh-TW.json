@@ -6,7 +6,8 @@
     "back": "返回",
     "settings": "設定",
     "history": "開啟紀錄",
-    "home": "回首頁"
+    "home": "回首頁",
+    "github": "在 GitHub 上查看原始碼"
   },
   "theme": {
     "toggle": "切換主題（目前：{{current}}）",

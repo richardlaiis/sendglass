@@ -6,7 +6,8 @@
     "back": "Back",
     "settings": "Settings",
     "history": "History",
-    "home": "Back to home"
+    "home": "Back to home",
+    "github": "View the source on GitHub"
   },
   "theme": {
     "toggle": "Switch theme (now: {{current}})",

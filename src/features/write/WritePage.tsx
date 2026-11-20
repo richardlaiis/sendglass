@@ -4,6 +4,7 @@ import { readClock } from "../../app/clock";
 import { navigate, useLeaveGuard } from "../../app/router";
 import { useNow } from "../../app/useNow";
 import { AppBar } from "../../components/AppBar";
+import { ChipGroup } from "../../components/ChipGroup";
 import { SegmentedButton } from "../../components/SegmentedButton";
 import {
   buildCapsule,
@@ -14,13 +15,17 @@ import {
 } from "../../domain/capsule";
 import { CONTENT_MAX, MAX_UNLOCK_MS, MIN_UNLOCK_MS, TITLE_MAX } from "../../domain/config";
 import { fromDateTimeLocalValue, toDateTimeLocalValue } from "../../domain/datetimeLocal";
+import { INTERVAL_CHIPS, getDatetimeChips } from "../../domain/quickChips";
 import type { UnlockType } from "../../domain/types";
-import { formatDuration, formatUnlockMoment } from "../../i18n/format";
+import { formatDuration, formatTime, formatUnlockMoment } from "../../i18n/format";
 import { useRepositories } from "../../storage/StorageContext";
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
+
+const CUSTOM = "custom";
+const DEFAULT_INTERVAL = INTERVAL_CHIPS[0]?.id ?? CUSTOM;
 
 function toCount(value: string): number {
   const n = Math.floor(Number(value));
@@ -32,11 +37,13 @@ export function WritePage() {
   const { capsules: repo } = useRepositories();
   const now = useNow();
   const id = useId();
+  const locale = i18n.language;
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [type, setType] = useState<UnlockType>("datetime");
   const [dateValue, setDateValue] = useState("");
+  const [intervalChoice, setIntervalChoice] = useState<string>(DEFAULT_INTERVAL);
   const [days, setDays] = useState("0");
   const [hours, setHours] = useState("1");
   const [minutes, setMinutes] = useState("0");
@@ -54,7 +61,9 @@ export function WritePage() {
       : type === "interval"
         ? {
             type,
-            durationMs: toCount(days) * DAY + toCount(hours) * HOUR + toCount(minutes) * MINUTE,
+            durationMs:
+              INTERVAL_CHIPS.find((c) => c.id === intervalChoice)?.durationMs ??
+              toCount(days) * DAY + toCount(hours) * HOUR + toCount(minutes) * MINUTE,
           }
         : { type, label: eventLabel };
   const draft: CapsuleDraft = { title, content, unlock };
@@ -105,12 +114,15 @@ export function WritePage() {
       ? unlock.label.trim() && t("write.previewEvent", { event: unlock.label.trim() })
       : unlockAt !== null && timeOk
         ? t("write.previewTime", {
-            moment: formatUnlockMoment(t, i18n.language, unlockAt, now),
+            moment: formatUnlockMoment(t, locale, unlockAt, now),
             duration: formatDuration(t, unlockAt - now, "ceil"),
           })
         : "";
 
   const invalid = (...keys: DraftError[]) => shownErrors.some((e) => keys.includes(e));
+
+  const datetimeChips = getDatetimeChips(now);
+  const selectedDateChip = datetimeChips.find((c) => toDateTimeLocalValue(c.at) === dateValue);
 
   return (
     <>
@@ -163,6 +175,21 @@ export function WritePage() {
             ]}
           />
 
+          {type === "datetime" && datetimeChips.length > 0 && (
+            <ChipGroup
+              label={t("write.chips.dateLabel")}
+              value={selectedDateChip?.id ?? null}
+              onSelect={(id) => {
+                const chip = datetimeChips.find((c) => c.id === id);
+                if (chip) setDateValue(toDateTimeLocalValue(chip.at));
+              }}
+              options={datetimeChips.map((c) => ({
+                value: c.id,
+                label: t(`write.chips.${c.id}`, { time: formatTime(locale, c.at) }),
+              }))}
+            />
+          )}
+
           {type === "datetime" && (
             <div className="field">
               <label className="field-label" htmlFor={`${id}-date`}>
@@ -182,6 +209,21 @@ export function WritePage() {
           )}
 
           {type === "interval" && (
+            <ChipGroup
+              label={t("write.chips.intervalLabel")}
+              value={intervalChoice}
+              onSelect={setIntervalChoice}
+              options={[
+                ...INTERVAL_CHIPS.map((c) => ({
+                  value: c.id,
+                  label: t(`write.chips.${c.unit}`, { count: c.value }),
+                })),
+                { value: CUSTOM, label: t("write.chips.custom") },
+              ]}
+            />
+          )}
+
+          {type === "interval" && intervalChoice === CUSTOM && (
             <div className="interval-fields">
               {(
                 [

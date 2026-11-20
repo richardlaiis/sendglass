@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/SettingsContext";
 import { AppBar } from "../../components/AppBar";
 import { SegmentedButton } from "../../components/SegmentedButton";
+import { Switch } from "../../components/Switch";
 import type { Language, Theme } from "../../domain/types";
 
 export function SettingsPage() {
@@ -32,6 +33,12 @@ export function SettingsPage() {
               { value: "light", label: t("theme.light") },
               { value: "dark", label: t("theme.dark") },
             ]}
+          />
+          <Switch
+            label={t("settings.earlyOpen")}
+            description={t("settings.earlyOpenHint")}
+            checked={settings.allowEarlyOpen}
+            onChange={(allowEarlyOpen) => updateSettings({ allowEarlyOpen })}
           />
         </div>
       </main>

@@ -10,3 +10,5 @@ export const TITLE_MAX = 60;
 export const CONTENT_MAX = 5000;
 
 export const SCHEMA_VERSION = 1 as const;
+
+export const REPLY_MAX = 5000;

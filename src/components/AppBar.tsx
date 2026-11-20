@@ -3,13 +3,20 @@ import { useTranslation } from "react-i18next";
 import { useSettings } from "../app/SettingsContext";
 import { navigate } from "../app/router";
 import { nextTheme } from "../domain/locale";
-import { ArrowBackIcon, AutoThemeIcon, DarkModeIcon, LightModeIcon, SettingsIcon } from "./icons";
+import {
+  ArrowBackIcon,
+  AutoThemeIcon,
+  DarkModeIcon,
+  HistoryIcon,
+  LightModeIcon,
+  SettingsIcon,
+} from "./icons";
 
 interface AppBarProps {
   title: string;
   /** Shows a back button that returns to Home. */
   back?: boolean;
-  /** Shows the settings button (Home only). */
+  /** Shows the history and settings buttons (Home only). */
   showSettings?: boolean;
 }
 
@@ -37,6 +44,11 @@ export function AppBar({ title, back = false, showSettings = false }: AppBarProp
         </button>
       )}
       <h1 className="app-bar__title">{title}</h1>
+      {showSettings && (
+        <a className="icon-btn" href="#/history" aria-label={t("nav.history")}>
+          <HistoryIcon />
+        </a>
+      )}
       <button
         type="button"
         className="icon-btn"

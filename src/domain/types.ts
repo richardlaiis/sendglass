@@ -19,6 +19,17 @@ export interface Capsule {
   notifiedAt?: number;
 }
 
+/**
+ * Fields that may change after sealing. Title and content are immutable,
+ * so they are deliberately not part of this type.
+ */
+export type CapsuleChanges = Partial<
+  Pick<
+    Capsule,
+    "unlock" | "openedAt" | "openedEarly" | "earlyConfirmations" | "reply" | "notifiedAt"
+  >
+>;
+
 export type Language = "system" | "en" | "zh-TW";
 export type Theme = "system" | "light" | "dark";
 

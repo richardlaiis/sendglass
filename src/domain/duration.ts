@@ -39,3 +39,15 @@ export function durationParts(ms: number, rounding: "ceil" | "floor"): DurationP
 function part(unit: DurationUnit, value: number): DurationPart {
   return { unit, value };
 }
+
+/**
+ * The largest whole unit in a duration: 2d 5h → { day, 2 }, 59s → { second, 59 }.
+ * Used for relative times ("3 days ago") and the "opened 2 days early" badge.
+ */
+export function largestUnit(ms: number): DurationPart {
+  const abs = Math.max(0, ms);
+  if (abs >= DAY) return part("day", Math.floor(abs / DAY));
+  if (abs >= HOUR) return part("hour", Math.floor(abs / HOUR));
+  if (abs >= MINUTE) return part("minute", Math.floor(abs / MINUTE));
+  return part("second", Math.floor(abs / SECOND));
+}

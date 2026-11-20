@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { durationParts } from "./duration";
+import { durationParts, largestUnit } from "./duration";
 import { DAY, HOUR, MIN } from "./testUtils";
 
 const S = 1000;
@@ -44,5 +44,18 @@ describe("durationParts", () => {
 
   it("treats negative durations as zero", () => {
     expect(durationParts(-5 * MIN, "ceil")).toEqual([{ unit: "second", value: 0 }]);
+  });
+});
+
+describe("largestUnit", () => {
+  it("picks the largest whole unit", () => {
+    expect(largestUnit(2 * DAY + 5 * HOUR)).toEqual({ unit: "day", value: 2 });
+    expect(largestUnit(DAY - 1)).toEqual({ unit: "hour", value: 23 });
+    expect(largestUnit(90 * MIN)).toEqual({ unit: "hour", value: 1 });
+    expect(largestUnit(59 * S)).toEqual({ unit: "second", value: 59 });
+  });
+
+  it("treats negative durations as zero seconds", () => {
+    expect(largestUnit(-HOUR)).toEqual({ unit: "second", value: 0 });
   });
 });

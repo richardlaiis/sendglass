@@ -20,11 +20,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     language: readMirroredLanguage(),
   }));
 
+  const [loaded, setLoaded] = useState(false);
+
   // IndexedDB is the source of truth; the mirror only covers first paint.
   useEffect(() => {
     let cancelled = false;
     void repo.get().then((stored) => {
-      if (!cancelled) setSettings(stored);
+      if (cancelled) return;
+      setSettings(stored);
+      setLoaded(true);
     });
     return () => {
       cancelled = true;
@@ -49,6 +53,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     [repo],
   );
 
-  const value = useMemo(() => ({ settings, updateSettings }), [settings, updateSettings]);
+  const value = useMemo(
+    () => ({ settings, loaded, updateSettings }),
+    [settings, loaded, updateSettings],
+  );
   return <SettingsContext value={value}>{children}</SettingsContext>;
 }

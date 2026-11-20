@@ -5,6 +5,7 @@ import "./styles/tokens.css";
 import "./styles/global.css";
 import { App } from "./app/App";
 import { SettingsProvider } from "./app/SettingsProvider";
+import { SnackbarProvider } from "./components/SnackbarProvider";
 import { StorageContext } from "./storage/StorageContext";
 import { createDexieRepositories } from "./storage/dexie";
 
@@ -17,7 +18,9 @@ createRoot(root).render(
   <StrictMode>
     <StorageContext value={repositories}>
       <SettingsProvider>
-        <App />
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
       </SettingsProvider>
     </StorageContext>
   </StrictMode>,

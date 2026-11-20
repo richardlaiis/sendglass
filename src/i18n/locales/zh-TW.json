@@ -4,7 +4,9 @@
   },
   "nav": {
     "back": "返回",
-    "settings": "設定"
+    "settings": "設定",
+    "history": "開啟紀錄",
+    "home": "回首頁"
   },
   "theme": {
     "toggle": "切換主題（目前：{{current}}）",
@@ -30,7 +32,8 @@
     "waitingFor": "等待中：{{event}}",
     "sealedAgo": "{{duration}}前封存",
     "left": "剩餘 {{duration}}",
-    "progressText": "{{percent}}，{{left}}"
+    "progressText": "{{percent}}，{{left}}",
+    "open": "打開"
   },
   "unlockAt": {
     "today": "今天 {{time}} 開啟",
@@ -79,16 +82,87 @@
       "tooLate_other": "開啟時間不能超過 {{count}} 天。",
       "eventLabelEmpty": "寫下你在等待的事。",
       "saveFailed": "儲存失敗，請再試一次。"
+    },
+    "chips": {
+      "dateLabel": "快速選擇",
+      "intervalLabel": "要等多久？",
+      "tonight": "今晚 {{time}}",
+      "tomorrow": "明天 {{time}}",
+      "weekend": "這個週末（週六 {{time}}）",
+      "hour_other": "{{count}} 小時",
+      "day_other": "{{count}} 天",
+      "week_other": "{{count}} 週",
+      "custom": "自訂"
     }
   },
   "settings": {
     "title": "設定",
     "language": "語言",
-    "theme": "主題"
+    "theme": "主題",
+    "earlyOpen": "允許提早打開",
+    "earlyOpenHint": "在封存中的膠囊上顯示「打破封印」。不過你還是得先通過好幾道確認。"
   },
-  "placeholder": {
-    "title": "即將推出",
-    "body": "這個畫面會在之後的更新中加入。",
-    "home": "回首頁"
+  "capsule": {
+    "appBar": "膠囊",
+    "notFound": "找不到這顆膠囊，可能已經被刪除了。",
+    "contentHidden": "開啟之前，內容都會好好藏著。",
+    "createdAt": "封存於 {{date}}",
+    "itHappened": "發生了",
+    "happenedTitle": "真的發生了嗎？",
+    "happenedBody": "確認「{{event}}」已經發生後，就可以打開這顆膠囊。",
+    "happenedConfirm": "是的，發生了",
+    "notYet": "還沒",
+    "breakSeal": "打破封印",
+    "stillSealed": "還沒到時間，再等等吧。",
+    "open": "打開",
+    "readyTime": "沙漏流完了，時間到了。",
+    "readyEvent": "「{{event}}」已經發生了，可以打開了。",
+    "delete": "刪除",
+    "deleteTitle": "要刪除這顆膠囊嗎？",
+    "deleteBody": "刪除後就無法復原。",
+    "cancel": "取消",
+    "deleted": "膠囊已刪除",
+    "written": "{{relative}}寫下・{{datetime}}",
+    "openedOn": "開啟於 {{date}}",
+    "replyLabel": "回覆過去的自己",
+    "replyPlaceholder": "親愛的過去的我……",
+    "saveReply": "儲存回覆",
+    "replySaved": "回覆已儲存",
+    "yourReply": "你的回覆",
+    "repliedOn": "回覆於 {{date}}",
+    "replyEmpty": "先寫點回覆吧。",
+    "replyTooLong": "回覆太長了（最多 {{count}} 字）。",
+    "failed": "出了點問題，請再試一次。"
+  },
+  "chain": {
+    "step1": "這顆膠囊還沒到開啟的時間。還是要打開嗎？",
+    "step2": "過去的你希望你再等等。確定嗎？",
+    "step3": "只剩 {{remaining}}了，真的等不及嗎？",
+    "step3Event": "「{{event}}」還沒發生耶，真的等不及了嗎？",
+    "step4": "最後機會……好吧，差不多是最後了。",
+    "step5": "好，認真問一次。你真的、真的確定嗎？",
+    "phraseTitle": "最後一步",
+    "phrasePrompt": "輸入「{{phrase}}」就能打開。",
+    "phrase": "我等不及了",
+    "phraseLabel": "通關語",
+    "phraseError": "不太對喔，請一字不差地輸入。",
+    "progress": "第 {{step}} 步，共 {{total}} 步",
+    "keepWaiting": "繼續等待",
+    "openAnyway": "還是要打開"
+  },
+  "early": {
+    "day_other": "提早 {{count}} 天打開 😬",
+    "hour_other": "提早 {{count}} 小時打開 😬",
+    "minute_other": "提早 {{count}} 分鐘打開 😬",
+    "second_other": "提早 {{count}} 秒打開 😬",
+    "event": "還沒發生就打開了 😬"
+  },
+  "history": {
+    "title": "開啟紀錄",
+    "empty": "打開過的膠囊會出現在這裡。",
+    "written": "寫於 {{date}}",
+    "opened": "開啟於 {{date}}",
+    "reply": "回覆：{{text}}",
+    "noReply": "還沒有回覆"
   }
 }

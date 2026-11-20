@@ -12,23 +12,32 @@ import {
 interface CapsuleCardProps {
   capsule: Capsule;
   now: number;
-  ready: boolean;
+  /** Present for ready capsules: shows the Open button. */
+  onOpen?: () => void;
 }
 
-export function CapsuleCard({ capsule, now, ready }: CapsuleCardProps) {
+/** Home card. The whole card links to the capsule page; the Open button sits above that link. */
+export function CapsuleCard({ capsule, now, onOpen }: CapsuleCardProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
+  const href = `#/capsule/${encodeURIComponent(capsule.id)}`;
 
-  const title = capsule.title ? (
-    <h3 className="capsule-card__title">{capsule.title}</h3>
-  ) : (
-    <h3 className="capsule-card__title capsule-card__title--hidden">
-      <span aria-hidden="true">{t("home.hiddenTitle")}</span>
-      <span className="visually-hidden">{t("home.untitled")}</span>
+  const title = (
+    <h3 className="capsule-card__title">
+      <a className="card-link" href={href}>
+        {capsule.title ?? (
+          <>
+            <span aria-hidden="true" className="masked">
+              {t("home.hiddenTitle")}
+            </span>
+            <span className="visually-hidden">{t("home.untitled")}</span>
+          </>
+        )}
+      </a>
     </h3>
   );
 
-  if (ready) {
+  if (onOpen) {
     return (
       <Card className="capsule-card capsule-card--ready">
         <div className="capsule-card__head">
@@ -38,6 +47,11 @@ export function CapsuleCard({ capsule, now, ready }: CapsuleCardProps) {
         <p className="capsule-card__meta">
           {t("home.sealedOn", { date: formatDateTime(locale, capsule.createdAt) })}
         </p>
+        <div className="card-actions">
+          <button type="button" className="btn btn--filled above-link" onClick={onOpen}>
+            {t("home.open")}
+          </button>
+        </div>
       </Card>
     );
   }
@@ -70,17 +84,23 @@ export function CapsuleCard({ capsule, now, ready }: CapsuleCardProps) {
         <span className="capsule-card__percent">{percent}</span>
         <span className="capsule-card__left">{left}</span>
       </div>
-      <div
-        className="progress"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={percentValue}
-        aria-valuetext={t("home.progressText", { percent, left })}
-      >
-        <div className="progress__bar" style={{ width: `${percentValue}%` }} />
-      </div>
+      <ProgressBar percentValue={percentValue} text={t("home.progressText", { percent, left })} />
       <p className="capsule-card__meta">{formatUnlockMoment(t, locale, unlockAt, now)}</p>
     </Card>
+  );
+}
+
+export function ProgressBar({ percentValue, text }: { percentValue: number; text: string }) {
+  return (
+    <div
+      className="progress"
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={percentValue}
+      aria-valuetext={text}
+    >
+      <div className="progress__bar" style={{ width: `${percentValue}%` }} />
+    </div>
   );
 }

@@ -4,7 +4,9 @@
   },
   "nav": {
     "back": "Back",
-    "settings": "Settings"
+    "settings": "Settings",
+    "history": "History",
+    "home": "Back to home"
   },
   "theme": {
     "toggle": "Switch theme (now: {{current}})",
@@ -30,7 +32,8 @@
     "waitingFor": "Waiting for: {{event}}",
     "sealedAgo": "Sealed {{duration}} ago",
     "left": "{{duration}} left",
-    "progressText": "{{percent}}, {{left}}"
+    "progressText": "{{percent}}, {{left}}",
+    "open": "Open"
   },
   "unlockAt": {
     "today": "Opens today {{time}}",
@@ -81,16 +84,94 @@
       "tooLate_other": "It must open within {{count}} days.",
       "eventLabelEmpty": "Describe what you’re waiting for.",
       "saveFailed": "Couldn’t save the capsule. Please try again."
+    },
+    "chips": {
+      "dateLabel": "Quick picks",
+      "intervalLabel": "How long?",
+      "tonight": "Tonight {{time}}",
+      "tomorrow": "Tomorrow {{time}}",
+      "weekend": "This weekend (Sat {{time}})",
+      "hour_one": "{{count}} hour",
+      "hour_other": "{{count}} hours",
+      "day_one": "{{count}} day",
+      "day_other": "{{count}} days",
+      "week_one": "{{count}} week",
+      "week_other": "{{count}} weeks",
+      "custom": "Custom"
     }
   },
   "settings": {
     "title": "Settings",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "earlyOpen": "Allow early opening",
+    "earlyOpenHint": "Shows “Break the seal” on sealed capsules. You’ll still have to get through a few confirmations."
   },
-  "placeholder": {
-    "title": "Coming soon",
-    "body": "This screen arrives in a later update.",
-    "home": "Back to home"
+  "capsule": {
+    "appBar": "Capsule",
+    "notFound": "This capsule doesn’t exist. Maybe it was deleted.",
+    "contentHidden": "The message stays hidden until it opens.",
+    "createdAt": "Sealed {{date}}",
+    "itHappened": "It happened",
+    "happenedTitle": "Did it really happen?",
+    "happenedBody": "Once you confirm that “{{event}}” happened, this capsule can be opened.",
+    "happenedConfirm": "Yes, it happened",
+    "notYet": "Not yet",
+    "breakSeal": "Break the seal",
+    "stillSealed": "Still sealed. Be patient.",
+    "open": "Open",
+    "readyTime": "The sand has run out. It’s time.",
+    "readyEvent": "“{{event}}” happened. It’s time.",
+    "delete": "Delete",
+    "deleteTitle": "Delete this capsule?",
+    "deleteBody": "This can’t be undone.",
+    "cancel": "Cancel",
+    "deleted": "Capsule deleted",
+    "written": "Written {{relative}}, at {{datetime}}",
+    "openedOn": "Opened {{date}}",
+    "replyLabel": "Reply to past you",
+    "replyPlaceholder": "Dear past me…",
+    "saveReply": "Save reply",
+    "replySaved": "Reply saved",
+    "yourReply": "Your reply",
+    "repliedOn": "Replied {{date}}",
+    "replyEmpty": "Write a reply first.",
+    "replyTooLong": "The reply is too long (max {{count}} characters).",
+    "failed": "Something went wrong. Please try again."
+  },
+  "chain": {
+    "step1": "This capsule isn’t ready yet. Open it anyway?",
+    "step2": "Past you wanted you to wait. Are you sure?",
+    "step3": "Only {{remaining}} left. You really can’t wait?",
+    "step3Event": "“{{event}}” hasn’t happened yet. You really can’t wait?",
+    "step4": "Last chance… well, almost.",
+    "step5": "Okay, seriously. Are you absolutely sure?",
+    "phraseTitle": "One last thing",
+    "phrasePrompt": "Type “{{phrase}}” to open it.",
+    "phrase": "I can't wait",
+    "phraseLabel": "Phrase",
+    "phraseError": "Not quite. Type it exactly.",
+    "progress": "Step {{step}} of {{total}}",
+    "keepWaiting": "Keep waiting",
+    "openAnyway": "Open anyway"
+  },
+  "early": {
+    "day_one": "Opened {{count}} day early 😬",
+    "day_other": "Opened {{count}} days early 😬",
+    "hour_one": "Opened {{count}} hour early 😬",
+    "hour_other": "Opened {{count}} hours early 😬",
+    "minute_one": "Opened {{count}} minute early 😬",
+    "minute_other": "Opened {{count}} minutes early 😬",
+    "second_one": "Opened {{count}} second early 😬",
+    "second_other": "Opened {{count}} seconds early 😬",
+    "event": "Opened before it happened 😬"
+  },
+  "history": {
+    "title": "History",
+    "empty": "Capsules you open will show up here.",
+    "written": "Written {{date}}",
+    "opened": "Opened {{date}}",
+    "reply": "Reply: {{text}}",
+    "noReply": "No reply yet"
   }
 }

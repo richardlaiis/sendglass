@@ -3,6 +3,8 @@ import type { Settings } from "../domain/types";
 
 export interface SettingsContextValue {
   settings: Settings;
+  /** False until the stored settings have been read (before that, only theme/language are known). */
+  loaded: boolean;
   updateSettings: (patch: Partial<Settings>) => void;
 }
 

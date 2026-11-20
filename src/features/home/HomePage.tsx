@@ -1,12 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { readClock } from "../../app/clock";
+import { navigate } from "../../app/router";
 import { useNow } from "../../app/useNow";
 import { AppBar } from "../../components/AppBar";
 import { Fab } from "../../components/Fab";
 import { AddIcon } from "../../components/icons";
+import { useSnackbar } from "../../components/SnackbarContext";
+import { openCapsule } from "../../domain/actions";
 import { groupForHome } from "../../domain/home";
 import type { Capsule } from "../../domain/types";
 import { useRepositories } from "../../storage/StorageContext";
+import { markJustOpened } from "../capsule/justOpened";
 import { CapsuleCard } from "./CapsuleCard";
 
 export function HomePage() {
@@ -14,6 +19,17 @@ export function HomePage() {
   const { capsules: repo } = useRepositories();
   const now = useNow();
   const [capsules, setCapsules] = useState<Capsule[] | null>(null);
+  const snackbar = useSnackbar();
+
+  async function open(capsule: Capsule) {
+    try {
+      await repo.update(capsule.id, openCapsule(capsule, readClock()));
+      markJustOpened(capsule.id);
+      navigate(`#/capsule/${encodeURIComponent(capsule.id)}`);
+    } catch {
+      snackbar.show(t("capsule.failed"));
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -46,7 +62,7 @@ export function HomePage() {
             </h2>
             <div className="card-list">
               {ready.map((c) => (
-                <CapsuleCard key={c.id} capsule={c} now={now} ready />
+                <CapsuleCard key={c.id} capsule={c} now={now} onOpen={() => void open(c)} />
               ))}
             </div>
           </section>
@@ -59,7 +75,7 @@ export function HomePage() {
             </h2>
             <div className="card-list">
               {sealed.map((c) => (
-                <CapsuleCard key={c.id} capsule={c} now={now} ready={false} />
+                <CapsuleCard key={c.id} capsule={c} now={now} />
               ))}
             </div>
           </section>

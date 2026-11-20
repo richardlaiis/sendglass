@@ -1,6 +1,6 @@
 import type { TFunction } from "i18next";
 import { getDayLabel } from "../domain/dayLabel";
-import { durationParts } from "../domain/duration";
+import { durationParts, largestUnit } from "../domain/duration";
 
 /** "5h 12m" / "5 小時 12 分". */
 export function formatDuration(t: TFunction, ms: number, rounding: "ceil" | "floor"): string {
@@ -54,4 +54,16 @@ export function formatPercent(locale: string, percent: number): string {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
   }).format(percent / 100);
+}
+
+/** "3 days ago" / "3 天前", "yesterday" / "昨天" — largest whole unit, via Intl.RelativeTimeFormat. */
+export function formatRelativePast(locale: string, ms: number): string {
+  const { unit, value } = largestUnit(ms);
+  return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(-value, unit);
+}
+
+/** "Opened 2 days early 😬" / "提早 2 天打開 😬". */
+export function formatOpenedEarly(t: TFunction, earlyByMs: number): string {
+  const { unit, value } = largestUnit(earlyByMs);
+  return t(`early.${unit}`, { count: Math.max(1, value) });
 }

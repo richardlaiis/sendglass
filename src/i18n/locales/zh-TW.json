@@ -1,0 +1,94 @@
+{
+  "app": {
+    "name": "沙漏膠囊"
+  },
+  "nav": {
+    "back": "返回",
+    "settings": "設定"
+  },
+  "theme": {
+    "toggle": "切換主題（目前：{{current}}）",
+    "system": "跟隨系統",
+    "light": "淺色",
+    "dark": "深色"
+  },
+  "language": {
+    "system": "跟隨系統",
+    "en": "English",
+    "zh-TW": "繁體中文"
+  },
+  "home": {
+    "ready": "可以打開了",
+    "sealed": "封存中",
+    "empty": "寫點什麼給未來的自己吧。",
+    "emptyHint": "點「新膠囊」，封存你的第一則訊息。",
+    "newCapsule": "新膠囊",
+    "hiddenTitle": "••••",
+    "untitled": "未命名的膠囊",
+    "readyBadge": "可以打開",
+    "sealedOn": "封存於 {{date}}",
+    "waitingFor": "等待中：{{event}}",
+    "sealedAgo": "{{duration}}前封存",
+    "left": "剩餘 {{duration}}",
+    "progressText": "{{percent}}，{{left}}"
+  },
+  "unlockAt": {
+    "today": "今天 {{time}} 開啟",
+    "tonight": "今晚 {{time}} 開啟",
+    "tomorrow": "明天 {{time}} 開啟",
+    "weekday": "{{weekday}} {{time}} 開啟",
+    "date": "{{date}} {{time}} 開啟"
+  },
+  "duration": {
+    "day": "{{count}} 天",
+    "hour": "{{count}} 小時",
+    "minute": "{{count}} 分",
+    "second": "{{count}} 秒",
+    "separator": " "
+  },
+  "write": {
+    "title": "新膠囊",
+    "titleLabel": "標題（選填）",
+    "bodyLabel": "想對未來的自己說的話",
+    "bodyPlaceholder": "親愛的未來的我……",
+    "counter": "{{count}} / {{max}}",
+    "unlockLabel": "什麼時候可以打開？",
+    "type": {
+      "datetime": "日期",
+      "interval": "一段時間",
+      "event": "事件"
+    },
+    "dateLabel": "開啟時間",
+    "days": "天",
+    "hours": "小時",
+    "minutes": "分鐘",
+    "eventLabel": "你在等什麼事？",
+    "eventPlaceholder": "考完試之後",
+    "eventHint": "在你點下「發生了」之前，它會一直封存著。",
+    "previewTime": "{{moment}}（還有 {{duration}}）",
+    "previewEvent": "「{{event}}」發生後開啟",
+    "seal": "封存",
+    "sealing": "封存中……",
+    "leaveConfirm": "要放棄這顆膠囊嗎？寫下的內容會消失。",
+    "errors": {
+      "contentEmpty": "先寫點什麼吧。",
+      "contentTooLong": "內容太長了（最多 {{count}} 字）。",
+      "titleTooLong": "標題太長了（最多 {{count}} 字）。",
+      "dateMissing": "請選擇日期和時間。",
+      "tooSoon_other": "開啟時間至少要在 {{count}} 分鐘後。",
+      "tooLate_other": "開啟時間不能超過 {{count}} 天。",
+      "eventLabelEmpty": "寫下你在等待的事。",
+      "saveFailed": "儲存失敗，請再試一次。"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "language": "語言",
+    "theme": "主題"
+  },
+  "placeholder": {
+    "title": "即將推出",
+    "body": "這個畫面會在之後的更新中加入。",
+    "home": "回首頁"
+  }
+}

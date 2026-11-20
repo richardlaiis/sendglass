@@ -1,0 +1,96 @@
+{
+  "app": {
+    "name": "Sendglass"
+  },
+  "nav": {
+    "back": "Back",
+    "settings": "Settings"
+  },
+  "theme": {
+    "toggle": "Switch theme (now: {{current}})",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "system": "System",
+    "en": "English",
+    "zh-TW": "繁體中文"
+  },
+  "home": {
+    "ready": "Ready to open",
+    "sealed": "Sealed",
+    "empty": "Write something to your future self.",
+    "emptyHint": "Tap “New capsule” to seal your first note.",
+    "newCapsule": "New capsule",
+    "hiddenTitle": "••••",
+    "untitled": "Untitled capsule",
+    "readyBadge": "Ready",
+    "sealedOn": "Sealed {{date}}",
+    "waitingFor": "Waiting for: {{event}}",
+    "sealedAgo": "Sealed {{duration}} ago",
+    "left": "{{duration}} left",
+    "progressText": "{{percent}}, {{left}}"
+  },
+  "unlockAt": {
+    "today": "Opens today {{time}}",
+    "tonight": "Opens tonight {{time}}",
+    "tomorrow": "Opens tomorrow {{time}}",
+    "weekday": "Opens {{weekday}} {{time}}",
+    "date": "Opens {{date}} {{time}}"
+  },
+  "duration": {
+    "day": "{{count}}d",
+    "hour": "{{count}}h",
+    "minute": "{{count}}m",
+    "second": "{{count}}s",
+    "separator": " "
+  },
+  "write": {
+    "title": "New capsule",
+    "titleLabel": "Title (optional)",
+    "bodyLabel": "Message to your future self",
+    "bodyPlaceholder": "Dear future me…",
+    "counter": "{{count}} / {{max}}",
+    "unlockLabel": "When can it be opened?",
+    "type": {
+      "datetime": "Date",
+      "interval": "Interval",
+      "event": "Event"
+    },
+    "dateLabel": "Open on",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "eventLabel": "What are you waiting for?",
+    "eventPlaceholder": "After my exam",
+    "eventHint": "It stays sealed until you tap “It happened”.",
+    "previewTime": "{{moment}} (in {{duration}})",
+    "previewEvent": "Opens after “{{event}}” happens",
+    "seal": "Seal",
+    "sealing": "Sealing…",
+    "leaveConfirm": "Discard this capsule? What you wrote will be lost.",
+    "errors": {
+      "contentEmpty": "Write something first.",
+      "contentTooLong": "The message is too long (max {{count}} characters).",
+      "titleTooLong": "The title is too long (max {{count}} characters).",
+      "dateMissing": "Pick a date and time.",
+      "tooSoon_one": "It must open at least {{count}} minute from now.",
+      "tooSoon_other": "It must open at least {{count}} minutes from now.",
+      "tooLate_one": "It must open within {{count}} day.",
+      "tooLate_other": "It must open within {{count}} days.",
+      "eventLabelEmpty": "Describe what you’re waiting for.",
+      "saveFailed": "Couldn’t save the capsule. Please try again."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "placeholder": {
+    "title": "Coming soon",
+    "body": "This screen arrives in a later update.",
+    "home": "Back to home"
+  }
+}

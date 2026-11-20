@@ -4,6 +4,19 @@
 >
 ## Quickstart
 
+Requires Node.js 24+.
+
+```sh
+npm install
+npm run dev      # http://localhost:5173
+npm test         # unit tests
+npm run lint     # ESLint + Prettier
+npm run build    # production build into dist/
+```
+
+Pushing to `main` deploys to GitHub Pages via `.github/workflows/deploy.yml`
+(in the repo settings, set Pages → Source to "GitHub Actions").
+
 ## Usage
 
 ## Support

@@ -17,6 +17,8 @@ export interface CapsuleRepository {
   exportAll(): Promise<Capsule[]>;
   /** Merges by id: capsules whose id already exists are skipped, never overwritten. */
   importAll(capsules: readonly Capsule[]): Promise<ImportResult>;
+  /** Calls `listener` after every write through this repository. Returns an unsubscribe function. */
+  onChange(listener: () => void): () => void;
 }
 
 export interface SettingsRepository {

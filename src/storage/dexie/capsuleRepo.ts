@@ -3,6 +3,9 @@ import type { CapsuleChanges, CapsuleRepository, ImportResult } from "../reposit
 import type { SendglassDB } from "./db";
 
 export function createDexieCapsuleRepository(db: SendglassDB): CapsuleRepository {
+  const listeners = new Set<() => void>();
+  const changed = () => listeners.forEach((l) => l());
+
   return {
     async list() {
       return db.capsules.orderBy("createdAt").toArray();
@@ -12,21 +15,24 @@ export function createDexieCapsuleRepository(db: SendglassDB): CapsuleRepository
     },
     async create(capsule) {
       await db.capsules.add(capsule);
+      changed();
     },
     async update(id: string, changes: CapsuleChanges) {
       const count = await db.capsules.update(id, changes);
       if (count === 0 && !(await db.capsules.get(id))) {
         throw new Error(`Capsule not found: ${id}`);
       }
+      changed();
     },
     async delete(id) {
       await db.capsules.delete(id);
+      changed();
     },
     async exportAll() {
       return db.capsules.orderBy("createdAt").toArray();
     },
     async importAll(capsules: readonly Capsule[]): Promise<ImportResult> {
-      return db.transaction("rw", db.capsules, async () => {
+      const result = await db.transaction("rw", db.capsules, async () => {
         const existing = await db.capsules.bulkGet(capsules.map((c) => c.id));
         const seen = new Set<string>();
         const fresh: Capsule[] = [];
@@ -37,6 +43,12 @@ export function createDexieCapsuleRepository(db: SendglassDB): CapsuleRepository
         await db.capsules.bulkAdd(fresh);
         return { imported: fresh.length, skipped: capsules.length - fresh.length };
       });
+      if (result.imported > 0) changed();
+      return result;
+    },
+    onChange(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
     },
   };
 }

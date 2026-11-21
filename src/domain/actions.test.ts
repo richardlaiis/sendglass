@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { addReply, markHappened, openCapsule, openEarly, validateReply } from "./actions";
+import {
+  addReply,
+  markHappened,
+  markNotified,
+  openCapsule,
+  openEarly,
+  validateReply,
+} from "./actions";
 import { REPLY_MAX } from "./config";
 import { getStatus } from "./status";
 import { HOUR, T0, makeCapsule } from "./testUtils";
@@ -78,5 +85,17 @@ describe("replies", () => {
     expect(validateReply("a".repeat(REPLY_MAX))).toBeNull();
     expect(validateReply("a".repeat(REPLY_MAX + 1))).toBe("replyTooLong");
     expect(() => addReply(opened, " ", T0)).toThrow(/replyEmpty/);
+  });
+});
+
+describe("markNotified", () => {
+  it("records when the unlock notification was shown", () => {
+    expect(markNotified(timed, T0 + HOUR)).toEqual({ notifiedAt: T0 + HOUR });
+  });
+
+  it("refuses sealed, opened and already notified capsules", () => {
+    expect(() => markNotified(timed, T0 + HOUR - 1)).toThrow();
+    expect(() => markNotified({ ...timed, openedAt: T0 + HOUR }, T0 + HOUR)).toThrow();
+    expect(() => markNotified({ ...timed, notifiedAt: T0 + HOUR }, T0 + 2 * HOUR)).toThrow();
   });
 });

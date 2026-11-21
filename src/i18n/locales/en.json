@@ -120,7 +120,19 @@
     "language": "Language",
     "theme": "Theme",
     "earlyOpen": "Allow early opening",
-    "earlyOpenHint": "Shows “Break the seal” on sealed capsules. You’ll still have to get through a few confirmations."
+    "earlyOpenHint": "Shows “Break the seal” on sealed capsules. You’ll still have to get through a few confirmations.",
+    "notifications": "Notifications",
+    "notificationsHint": "Get a notification when a capsule is ready to open. Works while Sendglass is open or recently in the background.",
+    "notifyPermission": {
+      "granted": "Permission: allowed",
+      "default": "Permission: not asked yet",
+      "denied": "Permission: blocked in your browser settings",
+      "unsupported": "This browser doesn’t support notifications"
+    },
+    "notifyBlocked": "Notifications are blocked. Allow them in your browser’s site settings.",
+    "notifyUnsupported": "This browser doesn’t support notifications.",
+    "notifyTest": "Send test notification",
+    "notifyTestFailed": "Couldn’t show a notification."
   },
   "capsule": {
     "appBar": "Capsule",
@@ -209,5 +221,15 @@
   },
   "reveal": {
     "skip": "Skip animation"
+  },
+  "notify": {
+    "title": "Your capsule is ready to open",
+    "body": "A capsule from {{relative}} is ready.",
+    "capsuleTitle": "“{{title}}”",
+    "summaryTitle_one": "{{count}} capsule is ready to open",
+    "summaryTitle_other": "{{count}} capsules are ready to open",
+    "summaryBody": "Tap to see them.",
+    "testTitle": "Notifications are on",
+    "testBody": "This is how Sendglass will tell you a capsule is ready."
   }
 }

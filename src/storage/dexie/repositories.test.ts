@@ -32,6 +32,21 @@ describe("Dexie capsule repository", () => {
     expect(await repo.get("a")).toBeUndefined();
   });
 
+  it("tells listeners about every write until they unsubscribe", async () => {
+    const repo = createDexieCapsuleRepository(db);
+    const listener = vi.fn();
+    const unsubscribe = repo.onChange(listener);
+    await repo.create(a);
+    await repo.update("a", { notifiedAt: T0 + HOUR });
+    await repo.importAll([a, b]);
+    await repo.importAll([a]); // nothing new: no change
+    await repo.delete("b");
+    expect(listener).toHaveBeenCalledTimes(4);
+    unsubscribe();
+    await repo.delete("a");
+    expect(listener).toHaveBeenCalledTimes(4);
+  });
+
   it("updates mutable fields", async () => {
     const repo = createDexieCapsuleRepository(db);
     await repo.create(b);

@@ -22,6 +22,10 @@ export default defineConfig([
     },
   },
   {
+    files: ["src/sw/**/*.ts"],
+    languageOptions: { globals: globals.serviceworker },
+  },
+  {
     files: ["src/domain/**/*.ts"],
     ignores: ["src/domain/**/*.test.ts"],
     rules: {

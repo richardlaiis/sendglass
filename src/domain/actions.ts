@@ -49,3 +49,10 @@ export function addReply(capsule: Capsule, text: string, now: number): CapsuleCh
   if (error) fail(error);
   return { reply: { content: text, createdAt: now } };
 }
+
+/** An unlock notification was shown for a ready time capsule (SPEC §9.1). */
+export function markNotified(capsule: Capsule, now: number): CapsuleChanges {
+  if (getStatus(capsule, now) !== "ready") fail("Only ready capsules can be notified about");
+  if (capsule.notifiedAt !== undefined) fail("Capsule was already notified about");
+  return { notifiedAt: now };
+}

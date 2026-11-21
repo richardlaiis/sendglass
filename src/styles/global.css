@@ -628,6 +628,16 @@ a {
   font-size: 1.125rem;
 }
 
+/* ---------- Settings ---------- */
+.settings-group {
+  display: grid;
+  gap: var(--space-0-5);
+}
+
+.settings-group__action {
+  justify-self: start;
+}
+
 /* ---------- Forms ---------- */
 .form {
   display: grid;

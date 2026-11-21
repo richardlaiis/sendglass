@@ -6,10 +6,12 @@ import "./styles/global.css";
 import { App } from "./app/App";
 import { SettingsProvider } from "./app/SettingsProvider";
 import { SnackbarProvider } from "./components/SnackbarProvider";
+import { startServiceWorker } from "./notifications/serviceWorker";
 import { StorageContext } from "./storage/StorageContext";
 import { createDexieRepositories } from "./storage/dexie";
 
 const repositories = createDexieRepositories();
+startServiceWorker();
 
 const root = document.getElementById("root");
 if (!root) throw new Error("#root not found");

@@ -111,7 +111,19 @@
     "language": "語言",
     "theme": "主題",
     "earlyOpen": "允許提早打開",
-    "earlyOpenHint": "在封存中的膠囊上顯示「打破封印」。不過你還是得先通過好幾道確認。"
+    "earlyOpenHint": "在封存中的膠囊上顯示「打破封印」。不過你還是得先通過好幾道確認。",
+    "notifications": "通知",
+    "notificationsHint": "膠囊可以打開時通知你。沙漏膠囊開著或剛切到背景時有效。",
+    "notifyPermission": {
+      "granted": "權限：已允許",
+      "default": "權限：還沒詢問",
+      "denied": "權限：已在瀏覽器設定中封鎖",
+      "unsupported": "這個瀏覽器不支援通知"
+    },
+    "notifyBlocked": "通知被封鎖了，請到瀏覽器的網站設定中允許通知。",
+    "notifyUnsupported": "這個瀏覽器不支援通知。",
+    "notifyTest": "傳送測試通知",
+    "notifyTestFailed": "無法顯示通知。"
   },
   "capsule": {
     "appBar": "膠囊",
@@ -196,5 +208,14 @@
   },
   "reveal": {
     "skip": "略過動畫"
+  },
+  "notify": {
+    "title": "你的膠囊可以打開了",
+    "body": "{{relative}}封存的膠囊可以打開了。",
+    "capsuleTitle": "「{{title}}」",
+    "summaryTitle_other": "有 {{count}} 顆膠囊可以打開了",
+    "summaryBody": "點一下看看吧。",
+    "testTitle": "通知已開啟",
+    "testBody": "膠囊可以打開時，沙漏膠囊會像這樣通知你。"
   }
 }

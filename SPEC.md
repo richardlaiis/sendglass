@@ -160,8 +160,9 @@ Rules:
 - **Seed color:** warm sand, `#B5835A`. Derive the M3 color roles (primary, on-primary, primary-container, surface, surface-container-low/high, outline, error, …) for **light** and **dark** schemes.
   - You may use `@material/material-color-utilities` to generate them, or hand-tune. Store them as CSS custom properties in `src/styles/tokens.css`.
 - **Shapes:** large rounded corners (cards 16–24px, buttons fully rounded).
-- **Typography:** system font stack for offline-friendliness and small size:
-  `"Roboto", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif`.
+- **Typography:** serif throughout (changed from sans-serif on 2026-11-21), using a system font stack for offline-friendliness and small size:
+  `"Noto Serif", Georgia, "Noto Serif TC", "Noto Serif CJK TC", "Source Han Serif TC", "Songti TC", PMingLiU, serif`.
+  On Android the generic `serif` resolves to Noto Serif and, for `lang="zh-TW"`, Noto Serif CJK.
   Do not bundle large CJK web fonts.
 - **Mood:** calm, warm, paper-like surfaces, gentle motion. No harsh shadows or neon colors.
 

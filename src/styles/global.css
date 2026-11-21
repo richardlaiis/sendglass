@@ -1,7 +1,14 @@
 /* Layout, shape and type tokens. Color roles live in tokens.css (generated). */
 :root {
+  /*
+   * Serif everywhere, from fonts already on the device (SPEC §6.1, no bundled CJK fonts).
+   * Latin faces come first so English text doesn't pick up a CJK font's Latin glyphs;
+   * CJK characters then fall through to the TC serif faces. Android Chrome doesn't expose
+   * these by name: generic `serif` gives Noto Serif, plus Noto Serif CJK for lang="zh-TW".
+   */
   --font-family:
-    "Roboto", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+    "Noto Serif", Georgia, "Noto Serif TC", "Noto Serif CJK TC", "Source Han Serif TC", "Songti TC",
+    PMingLiU, serif;
 
   /* 8dp grid */
   --space-1: 8px;

@@ -1,10 +1,13 @@
+import { pixelGrid, type PixelKind } from "./assemble";
 import { HOURGLASS } from "./hourglass";
 import { seededRandom } from "./random";
 
 /**
- * The shatter reveal (SPEC §6.4) as data: which cracks appear, how each glass
- * shard flies and how the sand spills. Seeded from the capsule id, so the same
- * capsule always shatters the same way. Coordinates are in the hourglass viewBox.
+ * The shatter reveal (SPEC §6.4) as data. Cracks appear on the glass; the glass
+ * then turns into a pixel version cut into shards, the shards break apart a little,
+ * and their pixels scatter and fade (sand pixels fall instead). Seeded from the
+ * capsule id, so the same capsule always shatters the same way. Coordinates are in
+ * the hourglass viewBox.
  */
 
 type Pt = readonly [number, number];
@@ -59,7 +62,7 @@ const CRACK_CANDIDATES: readonly (readonly Pt[])[] = [
 
 export const MIN_CRACKS = 3;
 export const MAX_CRACKS = 5;
-export const SAND_DOTS = 18;
+export const MAX_PIXEL_DELAY_MS = 300;
 
 export interface Crack {
   d: string;
@@ -67,6 +70,7 @@ export interface Crack {
   delay: number;
 }
 
+/** How a shard breaks away from the others: a short drift and a small tilt. */
 export interface ShardMotion {
   /** SVG polygon `points`. */
   points: string;
@@ -76,27 +80,29 @@ export interface ShardMotion {
   dy: number;
   /** Degrees. */
   rotate: number;
-  /** ms after the shatter starts. */
+  /** ms after the break starts. */
   delay: number;
 }
 
-export interface SandDot {
-  cx: number;
-  cy: number;
-  r: number;
+/** One square of the pixel hourglass, belonging to a shard, and where it flies. */
+export interface ShatterPixel {
+  x: number;
+  y: number;
+  size: number;
+  kind: PixelKind;
+  /** Index into `shards`. */
+  shard: number;
   dx: number;
   dy: number;
-  /** ms after the shatter starts. */
+  /** ms after the scatter starts. */
   delay: number;
 }
 
 export interface ShatterPlan {
   cracks: Crack[];
   shards: ShardMotion[];
-  dots: SandDot[];
+  pixels: ShatterPixel[];
 }
-
-const SIDEWAYS = 0.6;
 
 const CENTER = { x: HOURGLASS.cx, y: HOURGLASS.height / 2 };
 
@@ -116,38 +122,64 @@ export function planShatter(seed: string): ShatterPlan {
     delay: Math.round(n * 40 + between(0, 20)),
   }));
 
-  // Shards fly away from the middle of the glass, then gravity pulls them down a bit.
-  // Sideways travel is damped so they fade out before reaching the edges of a phone screen.
+  // Shards drift a little away from the middle of the glass, tilting as they go.
   const shards = SHARD_POLYGONS.map((poly) => {
     const origin = centroid(poly);
-    const vx = origin.x - CENTER.x;
-    const vy = origin.y - CENTER.y;
-    const len = Math.hypot(vx, vy) || 1;
-    const distance = between(45, 95);
+    const dir = unit(origin.x - CENTER.x, origin.y - CENTER.y);
+    const distance = between(6, 14);
     return {
       points: poly.map(([x, y]) => `${x},${y}`).join(" "),
       origin,
-      dx: (vx / len) * distance * SIDEWAYS,
-      dy: (vy / len) * distance + between(30, 70),
-      rotate: (rand() < 0.5 ? -1 : 1) * between(30, 160),
-      delay: Math.round(between(0, 120)),
+      dx: dir.x * distance,
+      dy: dir.y * distance,
+      rotate: (rand() < 0.5 ? -1 : 1) * between(4, 12),
+      delay: Math.round(between(0, 60)),
     };
   });
 
-  // Sand dots start inside the full bottom chamber and fall.
-  const dots = Array.from({ length: SAND_DOTS }, () => {
-    const { x, y } = pointInBottomChamber(rand(), rand());
+  // Then every pixel leaves: glass scatters outward, sand falls.
+  const pixels = pixelGrid().map((p) => {
+    const cx = p.x + p.size / 2;
+    const cy = p.y + p.size / 2;
+    const shard = shardAt(cx, cy);
+    const delay = Math.round(between(0, MAX_PIXEL_DELAY_MS));
+    if (p.kind === "sand") {
+      return { ...p, shard, dx: between(-12, 12), dy: between(40, 110), delay };
+    }
+    const base = Math.atan2(cy - CENTER.y, cx - CENTER.x);
+    const angle = base + between(-0.6, 0.6);
+    const distance = between(25, 70);
     return {
-      cx: x,
-      cy: y,
-      r: between(1.2, 2.6),
-      dx: between(-12, 12),
-      dy: between(50, 120),
-      delay: Math.round(between(0, 250)),
+      ...p,
+      shard,
+      dx: Math.cos(angle) * distance,
+      dy: Math.sin(angle) * distance,
+      delay,
     };
   });
 
-  return { cracks, shards, dots };
+  return { cracks, shards, pixels };
+}
+
+/** The shard containing a point (the shards tile the whole area). */
+export function shardAt(x: number, y: number): number {
+  const i = SHARD_POLYGONS.findIndex((poly) => inPolygon(x, y, poly));
+  return i === -1 ? 0 : i;
+}
+
+function inPolygon(x: number, y: number, poly: readonly Pt[]): boolean {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i] as Pt;
+    const [xj, yj] = poly[j] as Pt;
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+function unit(x: number, y: number): { x: number; y: number } {
+  const len = Math.hypot(x, y) || 1;
+  return { x: x / len, y: y / len };
 }
 
 function toPath(points: readonly Pt[]): string {
@@ -158,21 +190,4 @@ function centroid(poly: readonly Pt[]): { x: number; y: number } {
   const x = poly.reduce((s, p) => s + p[0], 0) / poly.length;
   const y = poly.reduce((s, p) => s + p[1], 0) / poly.length;
   return { x, y };
-}
-
-/** Uniform point in the bottom sand triangle, from two uniform numbers in [0, 1). */
-function pointInBottomChamber(u: number, v: number): { x: number; y: number } {
-  const { cx, bottomTipY, chamberH, chamberHalfBase } = HOURGLASS;
-  // Fold the unit square onto the triangle.
-  if (u + v > 1) {
-    u = 1 - u;
-    v = 1 - v;
-  }
-  const tip = { x: cx, y: bottomTipY };
-  const left = { x: cx - chamberHalfBase, y: bottomTipY + chamberH };
-  const right = { x: cx + chamberHalfBase, y: bottomTipY + chamberH };
-  return {
-    x: tip.x + u * (left.x - tip.x) + v * (right.x - tip.x),
-    y: tip.y + u * (left.y - tip.y) + v * (right.y - tip.y),
-  };
 }

@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { HOURGLASS } from "./hourglass";
-import { MAX_CRACKS, MIN_CRACKS, planShatter, SAND_DOTS, SHARD_POLYGONS } from "./shatter";
+import { pixelGrid } from "./assemble";
+import {
+  MAX_CRACKS,
+  MAX_PIXEL_DELAY_MS,
+  MIN_CRACKS,
+  planShatter,
+  SHARD_POLYGONS,
+  shardAt,
+} from "./shatter";
 
 function area(poly: readonly (readonly [number, number])[]): number {
   let sum = 0;
@@ -42,29 +50,48 @@ describe("planShatter", () => {
     }
   });
 
-  it("sends every shard outward from the middle of the glass", () => {
+  it("breaks every shard a little away from the middle of the glass", () => {
     const { shards } = planShatter("outward");
     expect(shards).toHaveLength(SHARD_POLYGONS.length);
     for (const s of shards) {
       const fromCenterX = s.origin.x - HOURGLASS.cx;
       if (Math.abs(fromCenterX) > 5) expect(Math.sign(s.dx)).toBe(Math.sign(fromCenterX));
-      expect(Math.abs(s.rotate)).toBeGreaterThanOrEqual(30);
-      expect(Math.abs(s.rotate)).toBeLessThanOrEqual(160);
-      expect(s.delay).toBeGreaterThanOrEqual(0);
-      expect(s.delay).toBeLessThanOrEqual(120);
+      expect(Math.hypot(s.dx, s.dy)).toBeLessThanOrEqual(14 + 1e-9);
+      expect(Math.abs(s.rotate)).toBeGreaterThanOrEqual(4);
+      expect(Math.abs(s.rotate)).toBeLessThanOrEqual(12);
     }
   });
 
-  it("starts the sand dots inside the bottom chamber and lets them fall", () => {
-    const { dots } = planShatter("sand");
-    expect(dots).toHaveLength(SAND_DOTS);
-    const { cx, bottomTipY, chamberH, chamberHalfBase } = HOURGLASS;
-    for (const d of dots) {
-      expect(d.cy).toBeGreaterThanOrEqual(bottomTipY);
-      expect(d.cy).toBeLessThanOrEqual(bottomTipY + chamberH);
-      const halfWidthHere = (chamberHalfBase * (d.cy - bottomTipY)) / chamberH;
-      expect(Math.abs(d.cx - cx)).toBeLessThanOrEqual(halfWidthHere + 1e-9);
-      expect(d.dy).toBeGreaterThan(0);
+  it("turns the whole hourglass into pixels, each in the shard that covers it", () => {
+    const { pixels } = planShatter("pixels");
+    expect(pixels).toHaveLength(pixelGrid().length);
+    for (const p of pixels) {
+      expect(p.shard).toBe(shardAt(p.x + p.size / 2, p.y + p.size / 2));
+      expect(p.delay).toBeGreaterThanOrEqual(0);
+      expect(p.delay).toBeLessThanOrEqual(MAX_PIXEL_DELAY_MS);
     }
+    // Every shard that covers part of the glass gets pixels.
+    expect(new Set(pixels.map((p) => p.shard)).size).toBeGreaterThan(8);
+  });
+
+  it("scatters glass pixels outward and lets sand pixels fall", () => {
+    const { pixels } = planShatter("scatter");
+    for (const p of pixels) {
+      if (p.kind === "sand") {
+        expect(p.dy).toBeGreaterThanOrEqual(40);
+        expect(Math.abs(p.dx)).toBeLessThanOrEqual(12);
+      } else {
+        const fromCenter = { x: p.x + p.size / 2 - HOURGLASS.cx, y: p.y + p.size / 2 - 100 };
+        // Within ±0.6 rad of straight out, so always moving away from the middle.
+        expect(fromCenter.x * p.dx + fromCenter.y * p.dy).toBeGreaterThan(0);
+      }
+    }
+  });
+});
+
+describe("shardAt", () => {
+  it("finds the shard around each hub", () => {
+    expect(shardAt(58, 50)).toBeLessThan(6); // top fan
+    expect(shardAt(63, 150)).toBeGreaterThanOrEqual(6); // bottom fan
   });
 });

@@ -9,12 +9,7 @@ import { seededRandom } from "./random";
 
 export type PixelKind = "glass" | "sand";
 
-export interface Pixel {
-  /** Top-left corner and size of the square. */
-  x: number;
-  y: number;
-  size: number;
-  kind: PixelKind;
+export interface Pixel extends GridPixel {
   /** Where it starts, relative to its place. */
   fromX: number;
   fromY: number;
@@ -31,30 +26,42 @@ export const MAX_DELAY_MS = 400;
 
 type Pt = readonly [number, number];
 
-export function planAssembly(seed: string): Pixel[] {
-  const rand = seededRandom(seed);
-  const pixels: Pixel[] = [];
-  const inset = (CELL - PIXEL_SIZE) / 2;
+export interface GridPixel {
+  /** Top-left corner and size of the square. */
+  x: number;
+  y: number;
+  size: number;
+  kind: PixelKind;
+}
 
+/**
+ * The ready-state hourglass (all sand at the bottom) as a grid of small squares.
+ * Shared by the sealing intro (pixels fly in) and the shatter (pixels scatter out).
+ */
+export function pixelGrid(): GridPixel[] {
+  const pixels: GridPixel[] = [];
+  const inset = (CELL - PIXEL_SIZE) / 2;
   for (let y = 8; y < 192; y += CELL) {
     for (let x = 8; x < 112; x += CELL) {
-      const center: Pt = [x + CELL / 2, y + CELL / 2];
-      const kind = classify(center);
-      if (!kind) continue;
-      const angle = rand() * Math.PI * 2;
-      const distance = 40 + rand() * 70;
-      pixels.push({
-        x: x + inset,
-        y: y + inset,
-        size: PIXEL_SIZE,
-        kind,
-        fromX: Math.cos(angle) * distance,
-        fromY: Math.sin(angle) * distance,
-        delay: Math.round(rand() * MAX_DELAY_MS),
-      });
+      const kind = classify([x + CELL / 2, y + CELL / 2]);
+      if (kind) pixels.push({ x: x + inset, y: y + inset, size: PIXEL_SIZE, kind });
     }
   }
   return pixels;
+}
+
+export function planAssembly(seed: string): Pixel[] {
+  const rand = seededRandom(seed);
+  return pixelGrid().map((p) => {
+    const angle = rand() * Math.PI * 2;
+    const distance = 40 + rand() * 70;
+    return {
+      ...p,
+      fromX: Math.cos(angle) * distance,
+      fromY: Math.sin(angle) * distance,
+      delay: Math.round(rand() * MAX_DELAY_MS),
+    };
+  });
 }
 
 /** Glass for the outline and caps, sand for the full bottom chamber, nothing elsewhere. */

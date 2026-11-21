@@ -494,12 +494,15 @@ a {
 }
 
 .shatter__sand,
-.shatter__dot {
+.shatter__pixel--sand {
   fill: var(--sg-sand-deep);
 }
 
-.shatter__crack,
-.shatter__crack--static {
+.shatter__pixel--glass {
+  fill: var(--sg-glass);
+}
+
+.shatter__crack {
   fill: none;
   stroke: var(--md-sys-color-on-surface);
   stroke-opacity: 0.75;
@@ -777,12 +780,13 @@ a {
   border-radius: inherit;
 }
 
+/*
+ * Hover = an M3 state layer: a light tint of the card's own text color laid over
+ * its background (background-image), so ready cards keep their color.
+ */
 .card:has(.card-link:hover) {
-  background: color-mix(
-    in srgb,
-    var(--md-sys-color-on-surface) 4%,
-    var(--md-sys-color-surface-container-low)
-  );
+  --state-layer: color-mix(in srgb, currentColor 6%, transparent);
+  background-image: linear-gradient(var(--state-layer), var(--state-layer));
 }
 
 .card:has(.card-link:focus-visible) {

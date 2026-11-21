@@ -310,14 +310,14 @@ Goal: "Your capsule is ready to open" when a capsule unlocks.
 - Tapping a notification opens the app at that capsule (`#/capsule/:id`).
 - Notification text never includes capsule content. Only "A capsule from {relative time} ago is ready." plus the title if present.
 
-### 9.2 Phase 5 (reliable notifications when the app is fully closed): DECISION NEEDED
+### 9.2 Phase 5 (reliable notifications when the app is fully closed): DECIDED, Option A
 
-A pure PWA cannot reliably fire a notification at an exact time while it is closed. Pick one before starting phase 5:
+A pure PWA cannot reliably fire a notification at an exact time while it is closed. Two options were considered:
 
-- **Option A (recommended): Android app via Capacitor** + `@capacitor/local-notifications`. Notifications are scheduled on the device, no server needed. Exact timing on recent Android versions may depend on the user granting the "Alarms & reminders" permission. Otherwise they can arrive a few minutes late.
-- **Option B: tiny push backend** (e.g. Cloudflare Worker with Cron Triggers + Web Push). It stores only `{ pushSubscription, capsuleId, unlockAt }`, never content. Works for the PWA on any platform, but adds a server to maintain.
+- **Option A (chosen 2026-11-21): Android app via Capacitor** + `@capacitor/local-notifications`. Notifications are scheduled on the device, no server needed. Exact timing on recent Android versions may depend on the user granting the "Alarms & reminders" permission. Otherwise they can arrive a few minutes late.
+- **Option B (not chosen): tiny push backend** (e.g. Cloudflare Worker with Cron Triggers + Web Push). It stores only `{ pushSubscription, capsuleId, unlockAt }`, never content. Works for the PWA on any platform, but adds a server to maintain.
 
-Do not implement phase 5 until this decision is recorded here.
+**Decision:** Option A. Phase 5 wraps the app in Capacitor for Android and schedules unlock notifications on the device with `@capacitor/local-notifications`. No backend is added. The web/PWA build keeps the Phase 3 behaviour (§9.1).
 
 ---
 
@@ -405,12 +405,12 @@ Manifest, icons, offline precache, update prompt, persistent storage request, ex
 
 ### Phase 5: Reliable background notifications
 
-Only after the §9.2 decision is recorded.
+Capacitor Android app with on-device local notifications (§9.2, Option A).
 
 ---
 
 ## 15. Open decisions
 
 - [x] App name: Sendglass (砂時寄)
-- [ ] §9.2: Capacitor Android app vs. push backend
+- [x] §9.2: Capacitor Android app (Option A), decided 2026-11-21
 - [ ] Min/max unlock limits (currently 1 minute / 30 days)

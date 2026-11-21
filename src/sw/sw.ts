@@ -1,14 +1,20 @@
 /// <reference lib="webworker" />
+import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
 import { NAVIGATE_MESSAGE, safeHash, type NavigateMessage } from "../notifications/messages";
 
 declare const self: ServiceWorkerGlobalScope;
 
 /*
- * Phase 3 service worker: only opens the app when a notification is tapped (SPEC §9.1).
- * Precaching and the update prompt come in Phase 4.
+ * Precaches the app shell for offline use (SPEC §11) and opens the app when a
+ * notification is tapped (SPEC §9.1).
+ *
+ * Routes are hash routes, so the only page ever requested is `<base>/`, which
+ * Workbox maps to the precached index.html.
  */
+precacheAndRoute(self.__WB_MANIFEST);
+cleanupOutdatedCaches();
 
-// Lets the page activate a waiting update (used by the Phase 4 update prompt).
+// The update prompt sends this when the user taps "Reload" (registerType: "prompt").
 self.addEventListener("message", (event) => {
   if ((event.data as { type?: unknown } | null)?.type === "SKIP_WAITING") void self.skipWaiting();
 });

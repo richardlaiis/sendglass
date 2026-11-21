@@ -217,5 +217,12 @@
     "summaryBody": "點一下看看吧。",
     "testTitle": "通知已開啟",
     "testBody": "膠囊可以打開時，砂時寄會像這樣通知你。"
+  },
+  "snackbar": {
+    "dismiss": "關閉"
+  },
+  "update": {
+    "available": "砂時寄有新版本了。",
+    "reload": "重新載入"
   }
 }

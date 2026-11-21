@@ -27,10 +27,11 @@ Short-term time capsule notes PWA. The full spec is the source of truth:
 - `npm run lint`: ESLint + Prettier check (`npm run format` to fix formatting; markdown is excluded)
 - Single test file: `npx vitest run src/domain/status.test.ts`
 - Single test by name: `npx vitest run -t "is ready exactly at the unlock moment"`
-- Subpath build like CI: `BASE_PATH=/sendglass/ npm run build && npm run preview`
+- Subpath build like CI: `export BASE_PATH=/sendglass/ && npm run build && npm run preview` (preview needs `BASE_PATH` too, or it serves at `/`)
 - Regenerate M3 color tokens: `npm run gen:tokens` (writes `src/styles/tokens.css`; don't hand-edit it)
+- Regenerate PWA icons: `npm run gen:icons` (renders `public/icons/*.svg` to PNGs with ImageMagick; the PNGs are committed)
 
-Approved dev-only extras beyond SPEC §3 (Phase 1): `i18next`, `@vitejs/plugin-react`, the ESLint/Prettier toolchain, `@types/*`, `@material/material-color-utilities`, `fake-indexeddb`.
+Approved dev-only extras beyond SPEC §3 (Phase 1): `i18next`, `@vitejs/plugin-react`, the ESLint/Prettier toolchain, `@types/*`, `@material/material-color-utilities`, `fake-indexeddb`. Phase 4: `workbox-precaching`.
 
 ## Architecture invariants
 
@@ -44,9 +45,10 @@ These span several modules. Lint enforces the first two.
 - **Animations** use the Web Animations API (`element.animate`), animate only transform/opacity, cancel on unmount, and have a `prefers-reduced-motion` path. Randomness is seeded from the capsule id (`src/domain/random.ts`). Hourglass geometry lives in `src/domain/hourglass.ts`; check visuals at `#/dev/hourglass` (dev builds only).
 - **Sealing:** the Write page saves the capsule only when the user presses OK in `SealCeremony`, so `createdAt` is that moment.
 - **Notifications:** `useNotificationScheduler()` (mounted once in `App`) re-plans with `planNotifications()` from `src/domain/notifications.ts` on start, focus, `CapsuleRepository.onChange` and its single timer. Notifications are shown via the service worker (`src/sw/sw.ts`, built by vite-plugin-pwa in injectManifest mode, own `tsconfig.sw.json`), which handles taps by messaging the open tab or opening `#/capsule/:id`. Never put capsule content in a notification.
-- **Dialogs and toasts:** use `components/Dialog` (native `<dialog>`, Esc/scrim = cancel) and mark the safe default button with `data-autofocus`. Show toasts with `useSnackbar()`.
+- **Service worker and updates:** `src/sw/sw.ts` precaches the app shell (`precacheAndRoute`, patterns in `vite.config.ts`). With `registerType: "prompt"`, a new version waits until the user taps Reload in the snackbar from `useUpdatePrompt()` (`onUpdateReady`/`applyUpdate` in `src/notifications/serviceWorker.ts`).
+- **Dialogs and toasts:** use `components/Dialog` (native `<dialog>`, Esc/scrim = cancel) and mark the safe default button with `data-autofocus`. Show toasts with `useSnackbar().show(message, { action?, persistent? })`.
 - **Settings have two copies.** IndexedDB is the source of truth. `theme` and `language` are mirrored to localStorage (`src/storage/settingsMirror.ts`), so the inline script in `index.html` can set `data-theme` before first paint and i18n can start in the right language. If you rename `sendglass.theme`, update both places.
-- **Theme:** `data-theme="light|dark"` on `<html>`. When the theme is `system`, the attribute is removed and `tokens.css` falls back to `prefers-color-scheme`.
+- **Theme:** `data-theme="light|dark"` on `<html>`. When the theme is `system`, the attribute is removed and `tokens.css` falls back to `prefers-color-scheme`. The `<meta name="theme-color">` tags follow the theme too (`src/app/themeColor.ts`); their colors are repeated in `index.html` and `vite.config.ts` (manifest), so keep the three in sync.
 - **Routing** is a tiny hash router (`src/app/router.ts` + pure `routes.ts`). Use `navigate()` for programmatic moves. `useLeaveGuard()` blocks leaving with unsaved input, and `navigate(hash, { force: true })` skips it after a save.
 - **i18n keys are typed** from `en.json` (`src/i18n/i18next.d.ts`). zh-TW plural keys use only the `_other` suffix. Format durations, dates and percentages with the helpers in `src/i18n/format.ts`.
-- **GitHub Pages base path** comes from the `BASE_PATH` env var (`vite.config.ts`). CI sets it to `/<repo>/`. Phase 4's manifest `start_url`/`scope` must use the same value.
+- **GitHub Pages base path** comes from the `BASE_PATH` env var (`vite.config.ts`). CI sets it to `/<repo>/`. The manifest's `start_url`/`scope` use the same value.

@@ -231,5 +231,12 @@
     "summaryBody": "Tap to see them.",
     "testTitle": "Notifications are on",
     "testBody": "This is how Sendglass will tell you a capsule is ready."
+  },
+  "snackbar": {
+    "dismiss": "Dismiss"
+  },
+  "update": {
+    "available": "A new version of Sendglass is ready.",
+    "reload": "Reload"
   }
 }

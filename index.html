@@ -4,14 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Short-term time capsule notes to your future self." />
+    <!-- Surface tones from src/styles/tokens.css. Keep in sync with src/app/themeColor.ts. -->
+    <meta name="theme-color" content="#fff8f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#19120c" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <title>Sendglass</title>
     <script>
       // Apply the saved theme before first paint (mirrored from IndexedDB by the settings repo).
-      // Keep the key in sync with THEME_KEY in src/storage/settingsMirror.ts.
+      // Keep the key in sync with THEME_KEY in src/storage/settingsMirror.ts,
+      // and the colors with src/app/themeColor.ts.
       try {
         var theme = localStorage.getItem("sendglass.theme");
         if (theme === "light" || theme === "dark") {
           document.documentElement.setAttribute("data-theme", theme);
+          var color = theme === "dark" ? "#19120c" : "#fff8f5";
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            m.setAttribute("content", color);
+          });
         }
       } catch (e) {}
     </script>

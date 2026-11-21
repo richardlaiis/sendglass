@@ -5,11 +5,13 @@ import { setAppLocale } from "../i18n";
 import { useRepositories } from "../storage/StorageContext";
 import { readMirroredLanguage, readMirroredTheme } from "../storage/settingsMirror";
 import { SettingsContext } from "./SettingsContext";
+import { applyThemeColor } from "./themeColor";
 
 function applyTheme(theme: Theme) {
   // "system" = no attribute; tokens.css then follows prefers-color-scheme.
   if (theme === "system") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.setAttribute("data-theme", theme);
+  applyThemeColor(theme);
 }
 
 export function SettingsProvider({ children }: { children: ReactNode }) {

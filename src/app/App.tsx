@@ -6,6 +6,7 @@ import { SettingsPage } from "../features/settings/SettingsPage";
 import { WritePage } from "../features/write/WritePage";
 import { useNotificationScheduler } from "../notifications/useNotificationScheduler";
 import { useRoute } from "./router";
+import { useUpdatePrompt } from "./useUpdatePrompt";
 
 // Dev-only playground. `import.meta.env.DEV` is false in production builds, so this is dropped.
 const DevHourglassPage = import.meta.env.DEV
@@ -15,6 +16,7 @@ const DevHourglassPage = import.meta.env.DEV
 export function App() {
   const route = useRoute();
   useNotificationScheduler();
+  useUpdatePrompt();
   switch (route.name) {
     case "home":
       return <HomePage />;

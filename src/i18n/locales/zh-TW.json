@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "沙漏膠囊"
+    "name": "砂時寄"
   },
   "nav": {
     "back": "返回",
@@ -113,7 +113,7 @@
     "earlyOpen": "允許提早打開",
     "earlyOpenHint": "在封存中的膠囊上顯示「打破封印」。不過你還是得先通過好幾道確認。",
     "notifications": "通知",
-    "notificationsHint": "膠囊可以打開時通知你。沙漏膠囊開著或剛切到背景時有效。",
+    "notificationsHint": "膠囊可以打開時通知你。砂時寄開著或剛切到背景時有效。",
     "notifyPermission": {
       "granted": "權限：已允許",
       "default": "權限：還沒詢問",
@@ -216,6 +216,6 @@
     "summaryTitle_other": "有 {{count}} 顆膠囊可以打開了",
     "summaryBody": "點一下看看吧。",
     "testTitle": "通知已開啟",
-    "testBody": "膠囊可以打開時，沙漏膠囊會像這樣通知你。"
+    "testBody": "膠囊可以打開時，砂時寄會像這樣通知你。"
   }
 }

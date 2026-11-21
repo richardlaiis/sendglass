@@ -1,6 +1,6 @@
 # SPEC — Sendglass: short-term time capsule notes
 
-> App name: **Sendglass** (沙漏膠囊). A pun on "send" + "sandglass": you send a message to your future self, and it waits in an hourglass.
+> App name: **Sendglass** (砂時寄). A pun on "send" + "sandglass": you send a message to your future self, and it waits in an hourglass.
 > This file is the single source of truth for any coding agent working on this repo.
 > Read it fully before planning or writing code. If something here is ambiguous, ask before guessing.
 
@@ -411,6 +411,6 @@ Only after the §9.2 decision is recorded.
 
 ## 15. Open decisions
 
-- [x] App name: Sendglass (沙漏膠囊)
+- [x] App name: Sendglass (砂時寄)
 - [ ] §9.2: Capacitor Android app vs. push backend
 - [ ] Min/max unlock limits (currently 1 minute / 30 days)

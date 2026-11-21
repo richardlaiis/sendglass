@@ -50,6 +50,17 @@
     "second": "{{count}}s",
     "separator": " "
   },
+  "durationLong": {
+    "day_one": "{{count}} day",
+    "day_other": "{{count}} days",
+    "hour_one": "{{count}} hour",
+    "hour_other": "{{count}} hours",
+    "minute_one": "{{count}} minute",
+    "minute_other": "{{count}} minutes",
+    "second_one": "{{count}} second",
+    "second_other": "{{count}} seconds",
+    "separator": " "
+  },
   "write": {
     "title": "New capsule",
     "titleLabel": "Title (optional)",
@@ -173,5 +184,20 @@
     "opened": "Opened {{date}}",
     "reply": "Reply: {{text}}",
     "noReply": "No reply yet"
+  },
+  "hourglass": {
+    "label": "Time until it opens",
+    "eventValue": "Waiting for: {{event}}. Sealed {{duration}} ago.",
+    "readyValue": "Ready to open"
+  },
+  "dev": {
+    "title": "Hourglass playground",
+    "progress": "Progress: {{percent}}",
+    "state": "State",
+    "states": {
+      "sealed": "Sealed",
+      "event": "Event",
+      "ready": "Ready"
+    }
   }
 }

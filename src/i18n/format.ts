@@ -9,6 +9,13 @@ export function formatDuration(t: TFunction, ms: number, rounding: "ceil" | "flo
     .join(t("duration.separator"));
 }
 
+/** "5 hours 12 minutes" / "5 小時 12 分鐘", for screen readers (aria-valuetext). */
+export function formatDurationLong(t: TFunction, ms: number, rounding: "ceil" | "floor"): string {
+  return durationParts(ms, rounding)
+    .map((p) => t(`durationLong.${p.unit}`, { count: p.value }))
+    .join(t("durationLong.separator"));
+}
+
 /** "21:00" in both locales (24-hour, as in the spec examples). */
 export function formatTime(locale: string, ms: number): string {
   return new Intl.DateTimeFormat(locale, {

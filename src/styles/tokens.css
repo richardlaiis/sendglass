@@ -37,6 +37,10 @@
   --md-sys-color-outline-variant: #d6c3b6;
   --md-sys-color-shadow: #000000;
   --md-sys-color-scrim: #000000;
+  --sg-sand: #e6a978;
+  --sg-sand-deep: #cd8d58;
+  --sg-glass: #948072;
+  --sg-glow: #ffb77c;
 }
 
 :root[data-theme="dark"] {
@@ -75,6 +79,10 @@
   --md-sys-color-outline-variant: #51443b;
   --md-sys-color-shadow: #000000;
   --md-sys-color-scrim: #000000;
+  --sg-sand: #ecaf7d;
+  --sg-sand-deep: #d3935c;
+  --sg-glass: #b7a293;
+  --sg-glow: #da904f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -114,5 +122,9 @@
     --md-sys-color-outline-variant: #51443b;
     --md-sys-color-shadow: #000000;
     --md-sys-color-scrim: #000000;
+    --sg-sand: #ecaf7d;
+    --sg-sand-deep: #d3935c;
+    --sg-glass: #b7a293;
+    --sg-glow: #da904f;
   }
 }

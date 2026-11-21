@@ -1,13 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { Card } from "../../components/Card";
-import { getProgress, getRemainingMs, getUnlockAt, toDisplayPercent } from "../../domain/status";
+import { Hourglass } from "../../components/Hourglass";
+import { ProgressReadout } from "../../components/ProgressReadout";
+import { useCapsuleProgress } from "../../components/useCapsuleProgress";
 import type { Capsule } from "../../domain/types";
-import {
-  formatDateTime,
-  formatDuration,
-  formatPercent,
-  formatUnlockMoment,
-} from "../../i18n/format";
+import { formatDateTime } from "../../i18n/format";
 
 interface CapsuleCardProps {
   capsule: Capsule;
@@ -19,8 +16,9 @@ interface CapsuleCardProps {
 /** Home card. The whole card links to the capsule page; the Open button sits above that link. */
 export function CapsuleCard({ capsule, now, onOpen }: CapsuleCardProps) {
   const { t, i18n } = useTranslation();
-  const locale = i18n.language;
+  const view = useCapsuleProgress(capsule, now);
   const href = `#/capsule/${encodeURIComponent(capsule.id)}`;
+  if (!view) return null;
 
   const title = (
     <h3 className="capsule-card__title">
@@ -37,70 +35,36 @@ export function CapsuleCard({ capsule, now, onOpen }: CapsuleCardProps) {
     </h3>
   );
 
-  if (onOpen) {
-    return (
-      <Card className="capsule-card capsule-card--ready">
-        <div className="capsule-card__head">
-          {title}
-          <span className="badge">{t("home.readyBadge")}</span>
-        </div>
-        <p className="capsule-card__meta">
-          {t("home.sealedOn", { date: formatDateTime(locale, capsule.createdAt) })}
-        </p>
-        <div className="card-actions">
-          <button type="button" className="btn btn--filled above-link" onClick={onOpen}>
-            {t("home.open")}
-          </button>
-        </div>
-      </Card>
-    );
-  }
-
-  if (capsule.unlock.type === "event") {
-    return (
-      <Card className="capsule-card">
-        {title}
-        <p className="capsule-card__primary">
-          {t("home.waitingFor", { event: capsule.unlock.label })}
-        </p>
-        <p className="capsule-card__meta">
-          {t("home.sealedAgo", { duration: formatDuration(t, now - capsule.createdAt, "floor") })}
-        </p>
-      </Card>
-    );
-  }
-
-  const progress = getProgress(capsule, now) ?? 0;
-  const remaining = getRemainingMs(capsule, now) ?? 0;
-  const unlockAt = getUnlockAt(capsule) ?? now;
-  const percentValue = toDisplayPercent(progress);
-  const percent = formatPercent(locale, percentValue);
-  const left = t("home.left", { duration: formatDuration(t, remaining, "ceil") });
+  const ready = view.state === "ready";
 
   return (
-    <Card className="capsule-card">
-      {title}
-      <div className="capsule-card__numbers">
-        <span className="capsule-card__percent">{percent}</span>
-        <span className="capsule-card__left">{left}</span>
+    <Card className={ready ? "capsule-card capsule-card--ready" : "capsule-card"}>
+      <Hourglass state={view.state} {...view.hourglass} size="small" />
+      <div className="capsule-card__body">
+        {ready ? (
+          <>
+            <div className="capsule-card__head">
+              {title}
+              <span className="badge">{t("home.readyBadge")}</span>
+            </div>
+            <p className="capsule-card__meta">
+              {t("home.sealedOn", { date: formatDateTime(i18n.language, capsule.createdAt) })}
+            </p>
+            {onOpen && (
+              <div className="card-actions">
+                <button type="button" className="btn btn--filled above-link" onClick={onOpen}>
+                  {t("home.open")}
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            {title}
+            <ProgressReadout view={view} />
+          </>
+        )}
       </div>
-      <ProgressBar percentValue={percentValue} text={t("home.progressText", { percent, left })} />
-      <p className="capsule-card__meta">{formatUnlockMoment(t, locale, unlockAt, now)}</p>
     </Card>
-  );
-}
-
-export function ProgressBar({ percentValue, text }: { percentValue: number; text: string }) {
-  return (
-    <div
-      className="progress"
-      role="progressbar"
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={percentValue}
-      aria-valuetext={text}
-    >
-      <div className="progress__bar" style={{ width: `${percentValue}%` }} />
-    </div>
   );
 }

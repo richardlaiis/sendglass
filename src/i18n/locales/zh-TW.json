@@ -50,6 +50,13 @@
     "second": "{{count}} 秒",
     "separator": " "
   },
+  "durationLong": {
+    "day_other": "{{count}} 天",
+    "hour_other": "{{count}} 小時",
+    "minute_other": "{{count}} 分鐘",
+    "second_other": "{{count}} 秒",
+    "separator": " "
+  },
   "write": {
     "title": "新膠囊",
     "titleLabel": "標題（選填）",
@@ -164,5 +171,20 @@
     "opened": "開啟於 {{date}}",
     "reply": "回覆：{{text}}",
     "noReply": "還沒有回覆"
+  },
+  "hourglass": {
+    "label": "距離開啟的進度",
+    "eventValue": "等待中：{{event}}。{{duration}}前封存。",
+    "readyValue": "可以打開了"
+  },
+  "dev": {
+    "title": "沙漏測試台",
+    "progress": "進度：{{percent}}",
+    "state": "狀態",
+    "states": {
+      "sealed": "封存中",
+      "event": "等待事件",
+      "ready": "可以打開"
+    }
   }
 }

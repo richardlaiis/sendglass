@@ -270,8 +270,16 @@ a {
 }
 
 .capsule-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.capsule-card__body {
+  flex: 1;
+  min-width: 0;
   display: grid;
-  gap: var(--space-1);
+  gap: var(--space-0-5);
 }
 
 .capsule-card--ready {
@@ -290,26 +298,6 @@ a {
   font-size: 1rem;
   font-weight: 500;
   overflow-wrap: anywhere;
-}
-
-.capsule-card__numbers {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-1);
-  flex-wrap: wrap;
-}
-
-.capsule-card__percent {
-  font-size: 1.75rem;
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
-  line-height: 2.25rem;
-}
-
-.capsule-card__left,
-.capsule-card__primary {
-  font-variant-numeric: tabular-nums;
 }
 
 .capsule-card__meta {
@@ -332,18 +320,165 @@ a {
   font-weight: 500;
 }
 
-.progress {
-  height: 4px;
-  border-radius: var(--radius-full);
-  background: var(--md-sys-color-surface-container-highest);
-  overflow: hidden;
+/* ---------- Hourglass (SPEC §6.3) ---------- */
+.hourglass {
+  flex-shrink: 0;
+  line-height: 0;
 }
 
-.progress__bar {
-  height: 100%;
-  border-radius: inherit;
-  background: var(--md-sys-color-primary);
-  transition: width 900ms linear;
+.hourglass svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.hourglass--small {
+  width: 48px;
+}
+
+.hourglass--large {
+  width: 132px;
+}
+
+.hourglass__glass {
+  fill: none;
+  stroke: var(--sg-glass);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.hourglass--small .hourglass__glass {
+  stroke-width: 3.5;
+}
+
+.hourglass__glass-fill {
+  fill: color-mix(in srgb, var(--sg-glass) 10%, transparent);
+}
+
+.hourglass__cap {
+  fill: var(--sg-glass);
+}
+
+.hourglass__sand {
+  fill: var(--sg-sand);
+}
+
+.hourglass__sand-deep {
+  fill: var(--sg-sand-deep);
+}
+
+.hourglass__level {
+  transition: transform 1s linear;
+}
+
+.hourglass__stream {
+  stroke: var(--sg-sand-deep);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 3 4;
+  animation: hourglass-stream 0.6s linear infinite;
+}
+
+.hourglass--small .hourglass__stream {
+  stroke-width: 3;
+}
+
+@keyframes hourglass-stream {
+  to {
+    stroke-dashoffset: -7;
+  }
+}
+
+/* Event capsules: sand resting on top, two slow waves drifting in opposite directions. */
+.hourglass__wave--front {
+  animation: hourglass-wave 7s linear infinite;
+}
+
+.hourglass__wave--back {
+  animation: hourglass-wave 11s linear infinite reverse;
+}
+
+@keyframes hourglass-wave {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-20px);
+  }
+}
+
+/* Ready: a soft glow behind the full bottom chamber. */
+.hourglass__glow {
+  opacity: 0.4;
+  animation: hourglass-glow 2.8s ease-in-out infinite alternate;
+}
+
+.hourglass__glow-stop {
+  stop-color: var(--sg-glow);
+  stop-opacity: 0.9;
+}
+
+.hourglass__glow-stop--edge {
+  stop-opacity: 0;
+}
+
+@keyframes hourglass-glow {
+  to {
+    opacity: 0.95;
+  }
+}
+
+.hourglass[data-offscreen] * {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hourglass__stream,
+  .hourglass__wave--front,
+  .hourglass__wave--back,
+  .hourglass__glow {
+    animation: none;
+  }
+
+  .hourglass__glow {
+    opacity: 0.7;
+  }
+
+  .hourglass__level {
+    transition: none;
+  }
+}
+
+/* ---------- Progress readout ---------- */
+.readout {
+  display: grid;
+  gap: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.readout__percent {
+  font-size: 1.75rem;
+  line-height: 2.25rem;
+  font-weight: 400;
+}
+
+.readout__meta {
+  font-size: 0.875rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.readout--large {
+  justify-items: center;
+  text-align: center;
+}
+
+.readout--large .readout__percent {
+  font-size: 3.5rem;
+  line-height: 4rem;
+}
+
+.readout--large .readout__primary {
+  font-size: 1.125rem;
 }
 
 /* ---------- Forms ---------- */
@@ -751,11 +886,11 @@ a {
   overflow-wrap: anywhere;
 }
 
-.detail__percent {
-  font-size: 3.5rem;
-  line-height: 4rem;
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
+.detail__progress {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
 }
 
 .detail__primary {
@@ -889,4 +1024,10 @@ section.reply {
     transition-duration: 0ms !important;
     animation-duration: 0ms !important;
   }
+}
+
+/* ---------- Dev playground (#/dev/hourglass, dev builds only) ---------- */
+.dev__preview,
+.dev__cards {
+  margin-top: var(--space-3);
 }

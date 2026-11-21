@@ -6,8 +6,11 @@ import { useSettings } from "../../app/SettingsContext";
 import { useNow } from "../../app/useNow";
 import { AppBar } from "../../components/AppBar";
 import { Dialog } from "../../components/Dialog";
+import { Hourglass } from "../../components/Hourglass";
 import { DeleteIcon } from "../../components/icons";
+import { ProgressReadout } from "../../components/ProgressReadout";
 import { useSnackbar } from "../../components/SnackbarContext";
+import { useCapsuleProgress } from "../../components/useCapsuleProgress";
 import {
   addReply,
   markHappened,
@@ -16,23 +19,10 @@ import {
   validateReply,
 } from "../../domain/actions";
 import { REPLY_MAX } from "../../domain/config";
-import {
-  getProgress,
-  getRemainingMs,
-  getStatus,
-  getUnlockAt,
-  toDisplayPercent,
-} from "../../domain/status";
+import { getStatus } from "../../domain/status";
 import type { Capsule, CapsuleChanges } from "../../domain/types";
-import {
-  formatDateTime,
-  formatDuration,
-  formatPercent,
-  formatRelativePast,
-  formatUnlockMoment,
-} from "../../i18n/format";
+import { formatDateTime, formatRelativePast } from "../../i18n/format";
 import { useRepositories } from "../../storage/StorageContext";
-import { ProgressBar } from "../home/CapsuleCard";
 import { ConfirmChain } from "./ConfirmChain";
 import { EarlyBadge } from "./EarlyBadge";
 import { clearJustOpened, wasJustOpened } from "./justOpened";
@@ -151,7 +141,7 @@ export function CapsulePage({ id }: { id: string }) {
         )}
 
         {capsule && status === "ready" && (
-          <ReadyView capsule={capsule} busy={busy} onOpen={() => void open()} />
+          <ReadyView capsule={capsule} now={now} busy={busy} onOpen={() => void open()} />
         )}
 
         {capsule && status === "opened" && (
@@ -278,43 +268,20 @@ function SealedView({
   onBreakSeal,
 }: SealedViewProps) {
   const { t, i18n } = useTranslation();
-  const locale = i18n.language;
+  const view = useCapsuleProgress(capsule, now);
   const isEvent = capsule.unlock.type === "event";
-
-  let numbers;
-  if (capsule.unlock.type === "event") {
-    numbers = (
-      <>
-        <p className="detail__primary">{t("home.waitingFor", { event: capsule.unlock.label })}</p>
-        <p className="detail__meta">
-          {t("home.sealedAgo", { duration: formatDuration(t, now - capsule.createdAt, "floor") })}
-        </p>
-      </>
-    );
-  } else {
-    const percentValue = toDisplayPercent(getProgress(capsule, now) ?? 0);
-    const percent = formatPercent(locale, percentValue);
-    const left = t("home.left", {
-      duration: formatDuration(t, getRemainingMs(capsule, now) ?? 0, "ceil"),
-    });
-    numbers = (
-      <>
-        <p className="detail__percent">{percent}</p>
-        <ProgressBar percentValue={percentValue} text={t("home.progressText", { percent, left })} />
-        <p className="detail__primary">{left}</p>
-        <p className="detail__meta">
-          {formatUnlockMoment(t, locale, getUnlockAt(capsule) ?? now, now)}
-        </p>
-      </>
-    );
-  }
 
   return (
     <section className="detail">
       <CapsuleTitle capsule={capsule} />
-      {numbers}
+      {view && (
+        <div className="detail__progress">
+          <Hourglass state={view.state} {...view.hourglass} size="large" />
+          <ProgressReadout view={view} size="large" />
+        </div>
+      )}
       <p className="detail__meta">
-        {t("capsule.createdAt", { date: formatDateTime(locale, capsule.createdAt) })}
+        {t("capsule.createdAt", { date: formatDateTime(i18n.language, capsule.createdAt) })}
       </p>
       <p className="detail__hidden">{t("capsule.contentHidden")}</p>
       <div className="detail__actions">
@@ -335,17 +302,25 @@ function SealedView({
 
 function ReadyView({
   capsule,
+  now,
   busy,
   onOpen,
 }: {
   capsule: Capsule;
+  now: number;
   busy: boolean;
   onOpen: () => void;
 }) {
   const { t, i18n } = useTranslation();
+  const view = useCapsuleProgress(capsule, now);
   return (
     <section className="detail detail--ready">
       <CapsuleTitle capsule={capsule} />
+      {view && (
+        <div className="detail__progress">
+          <Hourglass state={view.state} {...view.hourglass} size="large" />
+        </div>
+      )}
       <p className="detail__primary">
         {capsule.unlock.type === "event"
           ? t("capsule.readyEvent", { event: capsule.unlock.label })

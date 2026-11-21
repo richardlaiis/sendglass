@@ -1,4 +1,4 @@
-import { HOURGLASS } from "../domain/hourglass";
+import { CAPS, HOURGLASS } from "../domain/hourglass";
 
 /** SVG shapes for the hourglass, shared with the shatter reveal. viewBox 0 0 120 200. */
 const { cx, chamberH, chamberHalfBase, topTipY, bottomTipY } = HOURGLASS;
@@ -15,7 +15,7 @@ export const BOTTOM_CHAMBER = `${cx},${bottomTipY} ${cx + chamberHalfBase},${bot
 export const TOP_SAND = { x: 0, y: topBaseY, width: HOURGLASS.width, height: chamberH + 12 };
 export const BOTTOM_SAND = { x: 0, y: bottomTipY, width: HOURGLASS.width, height: chamberH + 12 };
 
-/** Glass outline: two soft triangles meeting at a narrow neck, rounded at the wide ends. */
+/** Glass outline: GLASS_OUTLINE with the wide corners rounded. */
 export const GLASS_PATH = [
   "M22 20 H98 Q104 20 100.8 26",
   "L61.5 100",
@@ -25,10 +25,7 @@ export const GLASS_PATH = [
   "L19.2 26 Q16 20 22 20 Z",
 ].join(" ");
 
-export const CAPS = [
-  { x: 12, y: 12, width: 96, height: 5, rx: 2.5 },
-  { x: 12, y: 183, width: 96, height: 5, rx: 2.5 },
-] as const;
+export { CAPS };
 
 export const STREAM = { x: cx, y1: topTipY - 1, y2: bottomBaseY };
 

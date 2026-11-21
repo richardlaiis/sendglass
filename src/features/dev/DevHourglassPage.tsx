@@ -6,6 +6,8 @@ import { AppBar } from "../../components/AppBar";
 import { Card } from "../../components/Card";
 import { Hourglass } from "../../components/Hourglass";
 import { ProgressReadout } from "../../components/ProgressReadout";
+import { SealCeremony } from "../../components/SealCeremony";
+import { ShatterReveal } from "../../components/ShatterReveal";
 import { SegmentedButton } from "../../components/SegmentedButton";
 import { useCapsuleProgress } from "../../components/useCapsuleProgress";
 import type { HourglassState } from "../../domain/hourglass";
@@ -38,6 +40,11 @@ export default function DevHourglassPage() {
   const [now] = useState(() => readClock());
   const [state, setState] = useState<HourglassState>("sealed");
   const [progress, setProgress] = useState(0.35);
+  /** Each press of "Play shatter" uses a new seed, so you see different patterns. */
+  const [shatter, setShatter] = useState({ run: 0, playing: false });
+  const seed = `dev-${shatter.run}`;
+  const [flipRun, setFlipRun] = useState(0);
+  const [flipping, setFlipping] = useState(false);
 
   const capsule = useMemo(() => fakeCapsule(state, progress, now), [state, progress, now]);
   const view = useCapsuleProgress(capsule, now);
@@ -81,7 +88,53 @@ export default function DevHourglassPage() {
               { value: "dark", label: t("theme.dark") },
             ]}
           />
+          <button
+            type="button"
+            className="btn btn--filled"
+            onClick={() => setShatter((s) => ({ run: s.run + 1, playing: true }))}
+          >
+            {t("dev.playShatter")}
+          </button>
+          <button
+            type="button"
+            className="btn btn--filled"
+            onClick={() => {
+              setFlipRun((n) => n + 1);
+              setFlipping(true);
+            }}
+          >
+            {t("dev.playFlip")}
+          </button>
         </div>
+
+        {flipping && (
+          <section className="dev__preview">
+            <SealCeremony
+              key={flipRun}
+              kind={state === "event" ? "event" : "time"}
+              seed={`dev-${flipRun}`}
+              onConfirm={() => Promise.resolve(true)}
+              onDone={() => setFlipping(false)}
+            />
+          </section>
+        )}
+
+        {shatter.run > 0 && (
+          <section className="dev__preview">
+            <p className="field-support">{t("dev.seed", { seed })}</p>
+            {shatter.playing ? (
+              <ShatterReveal
+                key={shatter.run}
+                seed={seed}
+                onDone={() => setShatter((s) => ({ ...s, playing: false }))}
+              >
+                <DevNote />
+              </ShatterReveal>
+            ) : (
+              <DevNote />
+            )}
+          </section>
+        )}
 
         {view && (
           <>
@@ -105,5 +158,14 @@ export default function DevHourglassPage() {
         )}
       </main>
     </>
+  );
+}
+
+function DevNote() {
+  const { t } = useTranslation();
+  return (
+    <article className="note">
+      <p className="note__body">{t("dev.sampleNote")}</p>
+    </article>
   );
 }

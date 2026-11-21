@@ -9,6 +9,7 @@ import { Dialog } from "../../components/Dialog";
 import { Hourglass } from "../../components/Hourglass";
 import { DeleteIcon } from "../../components/icons";
 import { ProgressReadout } from "../../components/ProgressReadout";
+import { ShatterReveal } from "../../components/ShatterReveal";
 import { useSnackbar } from "../../components/SnackbarContext";
 import { useCapsuleProgress } from "../../components/useCapsuleProgress";
 import {
@@ -149,6 +150,7 @@ export function CapsulePage({ id }: { id: string }) {
             capsule={capsule}
             now={now}
             reveal={reveal}
+            onRevealDone={() => setReveal(false)}
             onReply={(text) =>
               run(async (c) => {
                 await apply(addReply(c, text, readClock()));
@@ -346,11 +348,13 @@ function ReadyView({
 interface OpenedViewProps {
   capsule: Capsule;
   now: number;
+  /** Play the shatter reveal (just opened). */
   reveal: boolean;
+  onRevealDone: () => void;
   onReply: (text: string) => Promise<void>;
 }
 
-function OpenedView({ capsule, now, reveal, onReply }: OpenedViewProps) {
+function OpenedView({ capsule, now, reveal, onRevealDone, onReply }: OpenedViewProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const replyId = useId();
@@ -371,24 +375,37 @@ function OpenedView({ capsule, now, reveal, onReply }: OpenedViewProps) {
     void onReply(reply);
   }
 
+  const note = (
+    <article className="note">
+      {capsule.title && <h2 className="note__title">{capsule.title}</h2>}
+      <p className="note__body">{capsule.content}</p>
+      <p className="note__meta">
+        {t("capsule.written", {
+          relative: formatRelativePast(locale, now - capsule.createdAt),
+          datetime: formatDateTime(locale, capsule.createdAt),
+        })}
+      </p>
+      {capsule.openedAt !== undefined && (
+        <p className="note__meta">
+          {t("capsule.openedOn", { date: formatDateTime(locale, capsule.openedAt) })}
+        </p>
+      )}
+      <EarlyBadge capsule={capsule} />
+    </article>
+  );
+
+  // The reply waits until the note has risen into place.
+  if (reveal) {
+    return (
+      <ShatterReveal seed={capsule.id} onDone={onRevealDone}>
+        {note}
+      </ShatterReveal>
+    );
+  }
+
   return (
     <>
-      <article className={reveal ? "note note--reveal" : "note"}>
-        {capsule.title && <h2 className="note__title">{capsule.title}</h2>}
-        <p className="note__body">{capsule.content}</p>
-        <p className="note__meta">
-          {t("capsule.written", {
-            relative: formatRelativePast(locale, now - capsule.createdAt),
-            datetime: formatDateTime(locale, capsule.createdAt),
-          })}
-        </p>
-        {capsule.openedAt !== undefined && (
-          <p className="note__meta">
-            {t("capsule.openedOn", { date: formatDateTime(locale, capsule.openedAt) })}
-          </p>
-        )}
-        <EarlyBadge capsule={capsule} />
-      </article>
+      {note}
 
       {capsule.reply ? (
         <section className="reply">

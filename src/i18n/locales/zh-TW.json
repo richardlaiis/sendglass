@@ -101,7 +101,10 @@
       "day_other": "{{count}} 天",
       "week_other": "{{count}} 週",
       "custom": "自訂"
-    }
+    },
+    "sealedDone": "封存好了，開始等待吧。",
+    "askNoPeek": "不可以提早打開喔，好嗎？ :)",
+    "askOk": "好"
   },
   "settings": {
     "title": "設定",
@@ -185,6 +188,13 @@
       "sealed": "封存中",
       "event": "等待事件",
       "ready": "可以打開"
-    }
+    },
+    "playShatter": "播放碎裂動畫",
+    "sampleNote": "親愛的未來的我，你撐過來了。希望今天對你溫柔一點。",
+    "seed": "種子：{{seed}}",
+    "playFlip": "播放封存動畫"
+  },
+  "reveal": {
+    "skip": "略過動畫"
   }
 }

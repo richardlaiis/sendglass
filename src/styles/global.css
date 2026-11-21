@@ -449,6 +449,153 @@ a {
   }
 }
 
+/* ---------- Shatter reveal (SPEC §6.4) ---------- */
+.shatter {
+  display: grid;
+  /* Shards fly past the sides; clip them without creating a scroll container. */
+  overflow-x: clip;
+}
+
+.shatter > * {
+  grid-area: 1 / 1;
+}
+
+.shatter__stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: var(--space-2) 0 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.shatter__stage svg {
+  width: 132px;
+  height: auto;
+  overflow: visible;
+}
+
+.shatter__glass-fill {
+  fill: color-mix(in srgb, var(--sg-glass) 10%, transparent);
+}
+
+.shatter__glass {
+  fill: none;
+  stroke: var(--sg-glass);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.shatter__cap {
+  fill: var(--sg-glass);
+}
+
+.shatter__sand,
+.shatter__dot {
+  fill: var(--sg-sand-deep);
+}
+
+.shatter__crack,
+.shatter__crack--static {
+  fill: none;
+  stroke: var(--md-sys-color-on-surface);
+  stroke-opacity: 0.75;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Hidden until the animation draws it (pathLength = 1). */
+.shatter__crack {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.shatter__shards {
+  opacity: 0;
+}
+
+/* ---------- Sealing ceremony (Write → Seal) ---------- */
+.seal {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  text-align: center;
+}
+
+.seal__turn {
+  display: grid;
+  line-height: 0;
+}
+
+.seal__turn > * {
+  grid-area: 1 / 1;
+}
+
+.seal__pixels {
+  width: 132px;
+  height: auto;
+  overflow: visible;
+}
+
+.seal__pixel--glass {
+  fill: var(--sg-glass);
+}
+
+.seal__pixel--sand {
+  fill: var(--sg-sand);
+}
+
+.seal__caption {
+  font-size: 1.125rem;
+  text-wrap: balance;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.seal__ask {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  transition: opacity 300ms var(--motion-standard);
+}
+
+.seal__ask[data-visible="false"] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.seal__question {
+  font-size: 1.25rem;
+  text-wrap: balance;
+}
+
+.seal__ask .btn {
+  min-width: 120px;
+}
+
+/* The swap from "turned over" to "upright, full top" must be instant. */
+.seal[data-stage="before"] .hourglass__level,
+.seal[data-stage="flipped"] .hourglass__level {
+  transition: none;
+}
+
+/* Before the flip, the sand that will end up on top sits in the bottom chamber: same color. */
+.seal[data-stage="before"] .hourglass__sand-deep {
+  fill: var(--sg-sand);
+}
+
+.seal[data-kind="event"] .hourglass__stream {
+  display: none;
+}
+
+.seal[data-stage="settled"] .hourglass__level {
+  transition: transform 700ms var(--motion-standard);
+}
+
 /* ---------- Progress readout ---------- */
 .readout {
   display: grid;
@@ -944,17 +1091,6 @@ a {
   border-radius: var(--radius-card);
   background: var(--md-sys-color-surface-container-low);
   box-shadow: 0 1px 2px color-mix(in srgb, var(--md-sys-color-shadow) 10%, transparent);
-}
-
-.note--reveal {
-  animation: note-rise 500ms var(--motion-standard);
-}
-
-@keyframes note-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
 }
 
 .note__title {

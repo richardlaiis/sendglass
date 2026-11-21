@@ -110,7 +110,10 @@
       "week_one": "{{count}} week",
       "week_other": "{{count}} weeks",
       "custom": "Custom"
-    }
+    },
+    "sealedDone": "Sealed. Now the waiting begins.",
+    "askNoPeek": "Don’t open it early, OK? :)",
+    "askOk": "OK"
   },
   "settings": {
     "title": "Settings",
@@ -198,6 +201,13 @@
       "sealed": "Sealed",
       "event": "Event",
       "ready": "Ready"
-    }
+    },
+    "playShatter": "Play shatter",
+    "sampleNote": "Dear future me, you made it. I hope today is kind to you.",
+    "seed": "Seed: {{seed}}",
+    "playFlip": "Play sealing"
+  },
+  "reveal": {
+    "skip": "Skip animation"
   }
 }

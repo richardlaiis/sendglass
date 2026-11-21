@@ -1,6 +1,6 @@
 /**
  * Capsules opened a moment ago, so the capsule page knows to play the reveal
- * (a fade now; the shatter animation in Phase 3) instead of showing the note statically.
+ * (the shatter reveal) instead of showing the note statically.
  */
 const ids = new Set<string>();
 

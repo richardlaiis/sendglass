@@ -5,6 +5,7 @@ import { navigate, useLeaveGuard } from "../../app/router";
 import { useNow } from "../../app/useNow";
 import { AppBar } from "../../components/AppBar";
 import { ChipGroup } from "../../components/ChipGroup";
+import { SealCeremony } from "../../components/SealCeremony";
 import { SegmentedButton } from "../../components/SegmentedButton";
 import {
   buildCapsule,
@@ -51,6 +52,12 @@ export function WritePage() {
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
+  /**
+   * The sealing ceremony runs after "Seal". The capsule is only saved when the user
+   * presses OK there, so its time starts counting from that moment.
+   */
+  const [ceremony, setCeremony] = useState(false);
+  const [capsuleId] = useState(() => crypto.randomUUID());
 
   const dirty = title.trim() !== "" || content.trim() !== "" || eventLabel.trim() !== "";
   useLeaveGuard(dirty && !saving, t("write.leaveConfirm"));
@@ -89,16 +96,27 @@ export function WritePage() {
     e.preventDefault();
     setSubmitted(true);
     setSaveFailed(false);
-    const sealedAt = readClock();
-    if (validateDraft(draft, sealedAt).length > 0) return;
+    if (validateDraft(draft, readClock()).length > 0) return;
+    setCeremony(true);
+  }
 
+  /** Called when the user presses OK in the ceremony. False sends them back to the form. */
+  async function confirmSeal(): Promise<boolean> {
+    const sealedAt = readClock();
+    // Check again: a date that was valid when "Seal" was tapped may be too soon by now.
+    if (validateDraft(draft, sealedAt).length > 0) {
+      setCeremony(false);
+      return false;
+    }
     setSaving(true);
     try {
-      await repo.create(buildCapsule(draft, sealedAt, crypto.randomUUID()));
-      navigate("#/", { force: true });
+      await repo.create(buildCapsule(draft, sealedAt, capsuleId));
+      return true;
     } catch {
       setSaving(false);
       setSaveFailed(true);
+      setCeremony(false);
+      return false;
     }
   }
 
@@ -123,6 +141,22 @@ export function WritePage() {
 
   const datetimeChips = getDatetimeChips(now);
   const selectedDateChip = datetimeChips.find((c) => toDateTimeLocalValue(c.at) === dateValue);
+
+  if (ceremony) {
+    return (
+      <>
+        <AppBar title={t("write.title")} back />
+        <main className="page">
+          <SealCeremony
+            kind={type === "event" ? "event" : "time"}
+            seed={capsuleId}
+            onConfirm={confirmSeal}
+            onDone={() => navigate("#/", { force: true })}
+          />
+        </main>
+      </>
+    );
+  }
 
   return (
     <>

@@ -25,6 +25,25 @@ export const HOURGLASS = {
 
 const H = HOURGLASS.chamberH;
 
+/**
+ * Corners of the glass outline (two triangles meeting at a narrow neck). The
+ * drawn path rounds the wide corners a little; this is the straight-edged version.
+ */
+export const GLASS_OUTLINE: readonly (readonly [number, number])[] = [
+  [16, 20],
+  [104, 20],
+  [61.5, 100],
+  [104, 180],
+  [16, 180],
+  [58.5, 100],
+];
+
+/** The two caps above and below the glass. */
+export const CAPS = [
+  { x: 12, y: 12, width: 96, height: 5, rx: 2.5 },
+  { x: 12, y: 183, width: 96, height: 5, rx: 2.5 },
+] as const;
+
 /** How full the top chamber looks for event capsules (resting, no flow). */
 export const EVENT_RESTING_PROGRESS = 0.25;
 
